@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
-import { FileInputDirective } from './file-input/file-input.directive';
+import { HighlightAnonymizationPipe } from './highlight-anonymization.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FileInputDirective
+    HighlightAnonymizationPipe
   ],
   imports: [
     BrowserModule,

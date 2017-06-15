@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, RequestOptionsArgs } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
+import { Document } from './document';
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class UploadFileService {
   result;
   constructor(private http: Http) { }
 
-  postFile(files): Promise<string> {
+  postFile(files): Promise<Document> {
     const formData: FormData = new FormData();
     this.options.headers = new Headers(); // 'Content-Type': 'multipart/form-data'
 
@@ -25,8 +26,9 @@ export class UploadFileService {
     console.log(formData);
 
     return this.http.post(this.url, formData, this.options)
-      .toPromise().then(response => response.json().data as string)
+      .toPromise().then(response => response.json() as Document)
       .catch(this.handleError);
+
   }
 
   private handleError(error: any): Promise<any> {
