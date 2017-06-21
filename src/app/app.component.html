@@ -1,16 +1,15 @@
 <div class="container-fluid">
 	<div class="row content">
-		<div *ngIf="!outputFile" class="col-sm-10 sidenav">
+		<div *ngIf="!anonymizationHanlderService.text" class="col-sm-10 sidenav">
 			<input app-file-input="file" id="input-1" type="file"
 				class="upload-drop-zone file" (change)="fileHandle($event)">
-			{{outputFile}}
 		</div>
-		<div *ngIf="outputFile" class="col-sm-10 sidenav">
-			{{outputFile.fileName}}
+		<div id = "controlId" tabindex = "1" appKeyControl *ngIf="anonymizationHanlderService.text" class="col-sm-10 sidenav">
+			{{fileName}}
 			<div class="panel panel-default">
-				<div class="panel-body white" *ngFor="let page of outputFile.text">
+				<div class="panel-body white" *ngFor="let page of anonymizationHanlderService.text">
 					<div
-						[innerHtml]="page | highlightAnonymization:outputFile.anonymizations"></div>
+						[innerHtml]="page | highlightAnonymization:anonymizationHanlderService.anonymizations:trigger"></div>
 				</div>
 			</div>
 
@@ -77,21 +76,21 @@
 
 			<hr>
 
-			<table *ngIf="actuallyReworking">
+			<table *ngIf="anonymizationHanlderService.getActuallyReworking()">
 				<tr>
-					<td><h4>Annotierung:</h4></td>
+					<td><h4>Annotation:</h4></td>
 				</tr>
 
 				<tr>
-					<td><mark>{{actuallyReworking.original}}</mark></td>
+					<td><mark>{{anonymizationHanlderService.getActuallyReworking().original}}</mark></td>
 				</tr>
 				<tr>
 					<td><h3>Label: </h3></td>
 				</tr>
 				<tr>
-					<td> <select [(ngModel)]="actuallyReworking.Label"
+					<td> <select [(ngModel)]="anonymizationHanlderService.getActuallyReworking().Label"
 						class="form-control" label="categorySelect"><option
-								*ngFor="let label of allLabels">{{label}}</option>
+								*ngFor="let label of anonymizationHanlderService.getLabels()">{{label}}</option>
 					</select></td>
 				</tr>
 				<tr>
@@ -99,7 +98,7 @@
 				</tr>
 				<tr>
 					<td><input type="text" class="form-control" id="ersetzung"
-						[(ngModel)]="actuallyReworking.replacement"></td>
+						[(ngModel)]="anonymizationHanlderService.getActuallyReworking().replacement"></td>
 				</tr>
 
 
@@ -110,5 +109,5 @@
 </div>
 
 <footer class="container-fluid">
-	<p>AnonMl for the Win!</p>
+	<p>AnonMl for the win!</p>
 </footer>
