@@ -36,6 +36,29 @@ export class AppComponent {
 
   }
 
+  keyControl(event: KeyboardEvent): void {
+    switch (event.charCode) {
+      case 97:
+        console.log('pressed a');
+        this.anonymizationHanlderService.acceptedActualAnonymization();
+        this.updatePipe();
+        break;
+      case 119:
+        console.log('pressed w');
 
-  constructor(private uploadFileService: UploadFileService, private anonymizationHanlderService: AnonymizationHandlerService) { }
-}
+        break;
+      case 100:
+        console.log('pressed d');
+        this.anonymizationHanlderService.declineActualAnonymization();
+        this.updatePipe();
+        break;
+      case 115:
+        console.log('pressed s');
+
+        break;
+      default:
+    }
+  }
+
+    constructor(private uploadFileService: UploadFileService, private anonymizationHanlderService: AnonymizationHandlerService) { }
+  }

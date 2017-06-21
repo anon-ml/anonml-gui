@@ -4,7 +4,7 @@
 			<input app-file-input="file" id="input-1" type="file"
 				class="upload-drop-zone file" (change)="fileHandle($event)">
 		</div>
-		<div id = "controlId" tabindex = "1" appKeyControl *ngIf="anonymizationHanlderService.text" class="col-sm-10 sidenav">
+		<div id = "controlId" tabindex = "1" (keypress)="keyControl($event)" *ngIf="anonymizationHanlderService.text" class="col-sm-10 sidenav">
 			{{fileName}}
 			<div class="panel panel-default">
 				<div class="panel-body white" *ngFor="let page of anonymizationHanlderService.text">

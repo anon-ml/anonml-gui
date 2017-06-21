@@ -25,7 +25,6 @@ export class AnonymizationHandlerService {
   private anonymizations: Anonymization[];
 
   getAllTouchedAnonymizations(): number[] {
-
     return this.acceptedAnonymizations.concat(this.reworkedAnonymizations);
   }
 
@@ -75,6 +74,13 @@ export class AnonymizationHandlerService {
       return;
     }
     this.acceptedAnonymizations.push(this.actuallyReworking.id);
+    this.findNextAnonymization();
+  }
+
+  declineActualAnonymization(): void {
+    const index = this.anonymizations.indexOf(this.actuallyReworking);
+    this.declinedAnonymizations.push(this.actuallyReworking.id);
+    this.anonymizations.splice(index, 1);
     this.findNextAnonymization();
   }
 

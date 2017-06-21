@@ -4,13 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { HighlightAnonymizationPipe } from './highlight-anonymization.pipe';
-import { KeyControlDirective } from './key-control.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HighlightAnonymizationPipe,
-    KeyControlDirective
+    HighlightAnonymizationPipe
   ],
   imports: [
     BrowserModule,
