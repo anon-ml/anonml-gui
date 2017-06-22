@@ -1,13 +1,17 @@
 <div class="container-fluid">
 	<div class="row content">
-		<div *ngIf="!anonymizationHanlderService.text" class="col-sm-10 sidenav">
+		<div *ngIf="!anonymizationHanlderService.text"
+			class="col-sm-10 sidenav">
 			<input app-file-input="file" id="input-1" type="file"
 				class="upload-drop-zone file" (change)="fileHandle($event)">
 		</div>
-		<div id = "controlId" tabindex = "1" (keypress)="keyControl($event)" *ngIf="anonymizationHanlderService.text" class="col-sm-10 sidenav">
+		<div id="controlId" tabindex="1" [appFocusRework]="focusMainArea"
+			(keypress)="keyControl($event)"
+			*ngIf="anonymizationHanlderService.text" class="col-sm-10 sidenav">
 			{{fileName}}
 			<div class="panel panel-default">
-				<div class="panel-body white" *ngFor="let page of anonymizationHanlderService.text">
+				<div class="panel-body white"
+					*ngFor="let page of anonymizationHanlderService.text">
 					<div
 						[innerHtml]="page | highlightAnonymization:anonymizationHanlderService.anonymizations:trigger"></div>
 				</div>
@@ -75,35 +79,39 @@
 			</div>
 
 			<hr>
+			<div (keyup.enter)="enterRework()">
+				<table *ngIf="anonymizationHanlderService.getActuallyReworking()">
+					<tr>
+						<td><h4>Annotation:</h4></td>
+					</tr>
 
-			<table *ngIf="anonymizationHanlderService.getActuallyReworking()">
-				<tr>
-					<td><h4>Annotation:</h4></td>
-				</tr>
-
-				<tr>
-					<td><mark>{{anonymizationHanlderService.getActuallyReworking().original}}</mark></td>
-				</tr>
-				<tr>
-					<td><h3>Label: </h3></td>
-				</tr>
-				<tr>
-					<td> <select [(ngModel)]="anonymizationHanlderService.getActuallyReworking().Label"
-						class="form-control" label="categorySelect"><option
-								*ngFor="let label of anonymizationHanlderService.getLabels()">{{label}}</option>
-					</select></td>
-				</tr>
-				<tr>
-					<td><h3>Ersetzung:</h3></td>
-				</tr>
-				<tr>
-					<td><input type="text" class="form-control" id="ersetzung"
-						[(ngModel)]="anonymizationHanlderService.getActuallyReworking().replacement"></td>
-				</tr>
+					<tr>
+						<td><mark>{{anonymizationHanlderService.getActuallyReworking().original}}</mark></td>
+					</tr>
+					<tr>
+						<td><h3>Label:</h3></td>
+					</tr>
+					<tr>
+						<td><select [appFocusRework]="focusReworkArea"
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().Label"
+							class="form-control"><option
+									*ngFor="let label of anonymizationHanlderService.getLabels()">{{label}}</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td><h3>Ersetzung:</h3></td>
+					</tr>
+					<tr>
+						<td><input type="text" class="form-control" id="ersetzung"
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().replacement"></td>
+					</tr>
 
 
-			</table>
+				</table>
 
+				<a href="#" data-toggle="tooltip" title="Just hit 'Enter' to accept the changes!">Hover over me</a>
+
+			</div>
 		</div>
 	</div>
 </div>

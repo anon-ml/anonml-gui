@@ -84,6 +84,15 @@ export class AnonymizationHandlerService {
     this.findNextAnonymization();
   }
 
+  reworkedActualAnonymization(): void {
+    if (this.actuallyReworking == null) {
+      console.log('Document finished!');
+      return;
+    }
+    this.reworkedAnonymizations.push(this.actuallyReworking.id);
+    this.findNextAnonymization();
+  }
+
   constructor() { }
 
 }

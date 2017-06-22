@@ -1,6 +1,6 @@
 import { Anonymization } from './anonymization';
 import { AnonymizationHandlerService } from './anonymization-handler.service';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChildren, ViewChild, EventEmitter } from '@angular/core';
 import { FileReference } from 'typescript';
 import { UploadFileService } from './upload-file.service';
 import { Document } from './document';
@@ -16,9 +16,9 @@ import { HttpModule } from '@angular/http'
 export class AppComponent {
   title = 'AnonML';
   private trigger = 0;
-  private fileName: string;
-
-  @Input() file: any;
+  protected fileName: string;
+  protected focusReworkArea = new EventEmitter<boolean>();
+  protected focusMainArea = new EventEmitter<boolean>();
 
   updatePipe(): void {
     this.trigger++;
@@ -45,6 +45,7 @@ export class AppComponent {
         break;
       case 119:
         console.log('pressed w');
+        this.focusReworkArea.emit(true);
 
         break;
       case 100:
@@ -60,5 +61,12 @@ export class AppComponent {
     }
   }
 
-    constructor(private uploadFileService: UploadFileService, private anonymizationHanlderService: AnonymizationHandlerService) { }
+  enterRework(): void {
+    console.log('Hit Enter!');
+    this.focusMainArea.emit(true);
+    this.anonymizationHanlderService.reworkedActualAnonymization();
+    this.updatePipe();
   }
+
+  constructor(private uploadFileService: UploadFileService, protected anonymizationHanlderService: AnonymizationHandlerService) { }
+}
