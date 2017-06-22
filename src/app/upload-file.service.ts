@@ -29,8 +29,12 @@ export class UploadFileService {
   }
 
   saveFile(editedDocument: Document): Promise<string> {
-    const url = 'api/save'
-    return this.http.post(url, editedDocument)
+    const url = 'api/save/{' + editedDocument.id + '}'
+
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    return this.http.post(url, JSON.stringify(editedDocument.anonymizations), { headers: headers })
       .toPromise().then(response => response.json() as string)
       .catch(this.handleError);
   }
