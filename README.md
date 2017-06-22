@@ -9,11 +9,19 @@ To decline the current annotation and go on with the next one.
 # Press 'w'
 
 Jump into the edit area and edit the Label by hitting the down-key 
-or edit the replacement by hitting tab and type. It can be safed by pressing the Enter-button.
+or edit the replacement by hitting tab and type. It can be saved by pressing the Enter-button.
 
 # Press 's' 
 
-When finished it is possible to export the file by pressing s.
+When finished it is possible to save the file by pressing s.
+
+# Marking words using the mouse
+
+It is possible to mark words to add missing annotations. When a word (or more words) are selected,
+the focus jumps into the edit-area. By pressing the Enter-button after finishing the new annotation it is saved.
+
+
+
 
 ## Development server
 

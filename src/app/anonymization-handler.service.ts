@@ -26,6 +26,9 @@ export class AnonymizationHandlerService {
   protected text: string;
   protected anonymizations: Anonymization[];
 
+  getText(): string {
+    return this.text;
+  }
   getAnonymizations(): Anonymization[] {
     return this.anonymizations.concat(this.temporaryAnonymization);
   }
