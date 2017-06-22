@@ -20,12 +20,17 @@ export class AnonymizationHandlerService {
   private acceptedAnonymizations: number[] = [];
   private reworkedAnonymizations: number[] = [];
   private declinedAnonymizations: number[] = [];
+  private addedAnonymizations: number[] = [];
+  private temporaryAnonymization: Anonymization[] = [];
 
-  private text: string;
-  private anonymizations: Anonymization[];
+  protected text: string;
+  protected anonymizations: Anonymization[];
 
+  getAnonymizations(): Anonymization[] {
+    return this.anonymizations.concat(this.temporaryAnonymization);
+  }
   getAllTouchedAnonymizations(): number[] {
-    return this.acceptedAnonymizations.concat(this.reworkedAnonymizations);
+    return this.acceptedAnonymizations.concat(this.reworkedAnonymizations, this.addedAnonymizations);
   }
 
   setActualleReworking(actual: Anonymization): void {
@@ -39,11 +44,28 @@ export class AnonymizationHandlerService {
     return this.allLabels;
   }
 
+  setTemporatyAnonymization(): void {
+    this.temporaryAnonymization.length = 0;
+    this.temporaryAnonymization.push(this.actuallyReworking);
+  }
+
   findNextAnonymizationParam(text: string, anonymizations: Anonymization[]): void {
 
     this.text = text;
     this.anonymizations = anonymizations;
     this.findNextAnonymization();
+  }
+
+  getMaxId(): number {
+    let highestIndex = 0;
+    let id;
+    for (let i = 0; i < this.anonymizations.length; ++i) {
+      id = this.anonymizations[i].id;
+      if (id > highestIndex) {
+        highestIndex = id;
+      }
+    }
+    return highestIndex;
   }
 
   findNextAnonymization(): void {
@@ -78,6 +100,10 @@ export class AnonymizationHandlerService {
   }
 
   declineActualAnonymization(): void {
+    if (this.actuallyReworking == null) {
+      console.log('Document finished!');
+      return;
+    }
     const index = this.anonymizations.indexOf(this.actuallyReworking);
     this.declinedAnonymizations.push(this.actuallyReworking.id);
     this.anonymizations.splice(index, 1);
@@ -91,6 +117,13 @@ export class AnonymizationHandlerService {
     }
     this.reworkedAnonymizations.push(this.actuallyReworking.id);
     this.findNextAnonymization();
+  }
+
+  addedNewAnonymization(): void {
+    this.anonymizations.push(this.actuallyReworking);
+    this.addedAnonymizations.push(this.actuallyReworking.id);
+    this.findNextAnonymization();
+    this.temporaryAnonymization.length = 0;
   }
 
   constructor() { }

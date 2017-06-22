@@ -15,10 +15,12 @@ import { HttpModule } from '@angular/http'
 })
 export class AppComponent {
   title = 'AnonML';
-  private trigger = 0;
+  protected trigger = 0;
   protected fileName: string;
   protected focusReworkArea = new EventEmitter<boolean>();
   protected focusMainArea = new EventEmitter<boolean>();
+  protected selectedText;
+  protected tempAnonymization;
 
   updatePipe(): void {
     this.trigger++;
@@ -64,8 +66,34 @@ export class AppComponent {
   enterRework(): void {
     console.log('Hit Enter!');
     this.focusMainArea.emit(true);
-    this.anonymizationHanlderService.reworkedActualAnonymization();
+    if (this.anonymizationHanlderService.getActuallyReworking().id === (this.anonymizationHanlderService.getMaxId() + 1)) {
+      console.log('add new anonymization!');
+      this.anonymizationHanlderService.addedNewAnonymization();
+    } else {
+      this.anonymizationHanlderService.reworkedActualAnonymization();
+    }
+
     this.updatePipe();
+  }
+
+
+  getSelectionText(): void {
+    console.log('getSelectionText Entered.');
+    let t;
+    if (window.getSelection) {
+      t = window.getSelection();
+    } else if (document.getSelection) {
+      t = document.getSelection();
+    }
+    console.log('T: ' + t);
+    this.tempAnonymization = new Anonymization();
+    this.tempAnonymization.original = t.toString();
+    this.tempAnonymization.Producer = 'HUMAN';
+    this.tempAnonymization.id = this.anonymizationHanlderService.getMaxId() + 1;
+    this.anonymizationHanlderService.setActualleReworking(this.tempAnonymization);
+    this.anonymizationHanlderService.setTemporatyAnonymization();
+    this.updatePipe();
+    this.focusReworkArea.emit(true);
   }
 
   constructor(private uploadFileService: UploadFileService, protected anonymizationHanlderService: AnonymizationHandlerService) { }

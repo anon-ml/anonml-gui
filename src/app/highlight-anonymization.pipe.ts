@@ -22,19 +22,19 @@ export class HighlightAnonymizationPipe implements PipeTransform {
       } else {
 
         if (anonymizations[i].id === this.anonymizationHanlderService.getActuallyReworking().id) {
-          console.log('actual found: ' + this.anonymizationHanlderService.getActuallyReworking().original);
           replacement = '<span style="background-color:rgb(255,0,0)">[]</span>';
         }
-        const labels = this.anonymizationHanlderService.getLabels();
-        for (let j = 0; j < labels.length; ++j) {
-          if (labels[j] === anonymizations[i].Label) {
 
-            replacement += '<span style="background-color:rgb( 0 , ' + (255 - (j * 25) % 255) + ', ' + (255 - (j * 25) % 255) + ')">'
-              + anonymizations[i].original + '</span>'
-          }
+        const labels = this.anonymizationHanlderService.getLabels();
+        const indexOfLabel = labels.indexOf(anonymizations[i].Label)
+        if (indexOfLabel === -1) {
+          replacement += '<span style="background-color:rgb( 255 , 255, 255)">' + anonymizations[i].original + '</span>'
+        } else {
+          replacement += '<span style="background-color:rgb( 0 , ' + (255 - (indexOfLabel * 25) % 255) + ', '
+            + ((indexOfLabel * 25) % 255) + ')">' + anonymizations[i].original + '</span>'
         }
+
       }
-      console.log('replacement for ' + anonymizations[i].original + ': ' + replacement);
       newValue = newValue.replace(new RegExp(anonymizations[i].original, 'g'), replacement);
     }
     return this.sanitizer.bypassSecurityTrustHtml(newValue);
