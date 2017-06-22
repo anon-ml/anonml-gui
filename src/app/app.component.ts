@@ -96,5 +96,7 @@ export class AppComponent {
     this.focusReworkArea.emit(true);
   }
 
-  constructor(private uploadFileService: UploadFileService, protected anonymizationHanlderService: AnonymizationHandlerService) { }
+  constructor(private uploadFileService: UploadFileService, protected anonymizationHanlderService: AnonymizationHandlerService) {
+    this.focusMainArea.emit(true);
+  }
 }
