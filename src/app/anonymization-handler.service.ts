@@ -1,22 +1,13 @@
 import { Anonymization } from './anonymization';
+import { HttpService } from './http.service';
 import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
 export class AnonymizationHandlerService {
 
   private actuallyReworking: Anonymization;
-  private allLabels: string[] = ['PERSON',
-    'LOCATION',
-    'ORGANIZATION',
-    'MISC',
-    'LICENCE_PLATE',
-    'E_MAIL',
-    'TELEPHONE_NUMBER',
-    'URL',
-    'IP',
-    'BIRTHDATE',
-    'IBAN'
-  ];
+  private allLabels: string[];
   private acceptedAnonymizations: number[] = [];
   private reworkedAnonymizations: number[] = [];
   private declinedAnonymizations: number[] = [];
@@ -45,6 +36,21 @@ export class AnonymizationHandlerService {
 
   getLabels(): string[] {
     return this.allLabels;
+  }
+
+  generateColorForLabel(label: string, original: string, asHTML: boolean) {
+    let replacement = '';
+    const indexOfLabel = this.allLabels.indexOf(label)
+    if (indexOfLabel === -1) {
+      replacement += '<span style="background-color:rgb( 255 , 255, 255)">' + original + '</span>'
+    } else {
+      replacement += '<span style="background-color:rgb( 0 , ' + (255 - (indexOfLabel * 25) % 255) + ', '
+        + ((indexOfLabel * 25) % 255) + ')">' + original + '</span>'
+    }
+    if(asHTML) {
+      return this.sanitizer.bypassSecurityTrustHtml(replacement);
+    }
+    return replacement;
   }
 
   setTemporatyAnonymization(): void {
@@ -129,6 +135,9 @@ export class AnonymizationHandlerService {
     this.temporaryAnonymization.length = 0;
   }
 
-  constructor() { }
+  constructor(private httpService: HttpService, private sanitizer: DomSanitizer) {
+    this.httpService.getLabels().then(labels => this.allLabels = labels)
+
+  }
 
 }

@@ -2,8 +2,8 @@
 	<div class="row content">
 		<div *ngIf="!anonymizationHanlderService.text"
 			class="col-sm-10 sidenav">
-			<input id="input-1" type="file"
-				class="upload-drop-zone file" (change)="fileHandle($event)">
+			<input id="input-1" type="file" class="upload-drop-zone file"
+				(change)="fileHandle($event)">
 		</div>
 		<div id="controlId" tabindex="1" [appFocusRework]="focusMainArea"
 			(keypress)="keyControl($event)"
@@ -86,7 +86,11 @@
 					</tr>
 
 					<tr>
-						<td><mark>{{anonymizationHanlderService.getActuallyReworking().original}}</mark></td>
+						<td><div
+								[innerHtml]="anonymizationHanlderService.generateColorForLabel(
+								anonymizationHanlderService.getActuallyReworking().Label, 
+								anonymizationHanlderService.getActuallyReworking().original, 
+								true)"></div></td>
 					</tr>
 					<tr>
 						<td><h3>Label:</h3></td>

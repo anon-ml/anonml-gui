@@ -6,12 +6,18 @@ import { Document } from './document';
 
 
 @Injectable()
-export class UploadFileService {
+export class HttpService {
 
   private headers = new Headers({});
   options: RequestOptionsArgs = new RequestOptions();
 
   constructor(private http: Http) { }
+
+  getLabels(): Promise<string[]> {
+    const url = '/api/labels';
+    return this.http.get(url).toPromise().then(response => response.json() as String[]).catch(this.handleError);
+  }
+
 
   postFile(files): Promise<Document> {
     const url = '/api/upload';
@@ -29,7 +35,7 @@ export class UploadFileService {
   }
 
   saveFile(editedDocument: Document): Promise<string> {
-    const url = 'api/save/{' + editedDocument.id + '}'
+    const url = 'api/save/' + editedDocument.id
 
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');

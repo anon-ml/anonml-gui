@@ -2,7 +2,7 @@ import { Anonymization } from './anonymization';
 import { AnonymizationHandlerService } from './anonymization-handler.service';
 import { Component, Input, ViewChildren, ViewChild, EventEmitter } from '@angular/core';
 import { FileReference } from 'typescript';
-import { UploadFileService } from './upload-file.service';
+import { HttpService } from './http.service';
 import { Document } from './document';
 import { HttpModule } from '@angular/http'
 
@@ -11,7 +11,7 @@ import { HttpModule } from '@angular/http'
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [UploadFileService, AnonymizationHandlerService]
+  providers: [HttpService, AnonymizationHandlerService]
 })
 export class AppComponent {
   title = 'AnonML';
@@ -33,7 +33,7 @@ export class AppComponent {
     const files = event.target.files || event.srcElement.files;
     console.log(files);
 
-    this.uploadFileService.postFile(files).then(response => {
+    this.httpService.postFile(files).then(response => {
       this.fileName = response.fileName;
       this.docId = response.id;
       this.docFileType = response.originalFileType;
@@ -70,7 +70,7 @@ export class AppComponent {
           document.originalFileType = this.docFileType;
           document.text = this.anonymizationHanlderService.getText();
 
-          this.uploadFileService.saveFile(document);
+          this.httpService.saveFile(document);
         } else {
           console.log('Document not finished!');
         }
@@ -103,7 +103,10 @@ export class AppComponent {
     } else if (document.getSelection) {
       t = document.getSelection();
     }
-    console.log('T: ' + t);
+    // first check for wrong selections
+    if (String(t) === '' || String(t) === ' ') {
+      return;
+    }
     this.tempAnonymization = new Anonymization();
     this.tempAnonymization.original = t.toString();
     this.tempAnonymization.Producer = 'HUMAN';
@@ -114,7 +117,7 @@ export class AppComponent {
     this.focusReworkArea.emit(true);
   }
 
-  constructor(private uploadFileService: UploadFileService, protected anonymizationHanlderService: AnonymizationHandlerService) {
+  constructor(private httpService: HttpService, protected anonymizationHanlderService: AnonymizationHandlerService) {
     this.focusMainArea.emit(true);
   }
 }

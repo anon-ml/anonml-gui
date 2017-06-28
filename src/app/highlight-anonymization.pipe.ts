@@ -25,15 +25,7 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           replacement = '<span style="background-color:rgb(255,0,0)">[]</span>';
         }
 
-        const labels = this.anonymizationHanlderService.getLabels();
-        const indexOfLabel = labels.indexOf(anonymizations[i].Label)
-        if (indexOfLabel === -1) {
-          replacement += '<span style="background-color:rgb( 255 , 255, 255)">' + anonymizations[i].original + '</span>'
-        } else {
-          replacement += '<span style="background-color:rgb( 0 , ' + (255 - (indexOfLabel * 25) % 255) + ', '
-            + ((indexOfLabel * 25) % 255) + ')">' + anonymizations[i].original + '</span>'
-        }
-
+        replacement += this.anonymizationHanlderService.generateColorForLabel(anonymizations[i].Label, anonymizations[i].original, false);
       }
       newValue = newValue.replace(new RegExp(anonymizations[i].original, 'g'), replacement);
     }
