@@ -14,11 +14,11 @@ export class AnonymizationHandlerService {
   private addedAnonymizations: number[] = [];
   private temporaryAnonymization: Anonymization[] = [];
 
-  protected text: string;
+  protected displayableText: string;
   protected anonymizations: Anonymization[];
 
   getText(): string {
-    return this.text;
+    return this.displayableText;
   }
   getAnonymizations(): Anonymization[] {
     return this.anonymizations.concat(this.temporaryAnonymization);
@@ -47,7 +47,7 @@ export class AnonymizationHandlerService {
       replacement += '<span style="background-color:rgb( 0 , ' + (255 - (indexOfLabel * 25) % 255) + ', '
         + ((indexOfLabel * 25) % 255) + ')">' + original + '</span>'
     }
-    if(asHTML) {
+    if (asHTML) {
       return this.sanitizer.bypassSecurityTrustHtml(replacement);
     }
     return replacement;
@@ -58,9 +58,9 @@ export class AnonymizationHandlerService {
     this.temporaryAnonymization.push(this.actuallyReworking);
   }
 
-  findNextAnonymizationParam(text: string, anonymizations: Anonymization[]): void {
+  findNextAnonymizationParam(displayableText: string, anonymizations: Anonymization[]): void {
 
-    this.text = text;
+    this.displayableText = displayableText;
     this.anonymizations = anonymizations;
     this.findNextAnonymization();
   }
@@ -86,8 +86,13 @@ export class AnonymizationHandlerService {
       if (this.getAllTouchedAnonymizations().includes(this.anonymizations[i].id)) {
         continue;
       }
-      foundIndex = this.text.indexOf(this.anonymizations[i].original);
-      if (foundIndex < lowestIndex) {
+      foundIndex = this.displayableText.indexOf(this.anonymizations[i].original);
+      console.log(this.anonymizations[i].original + ' -- ' + foundIndex);
+      // TODO: problem, da aktuell nix gefunden wird..
+      if (foundIndex === -1) {
+        console.log(this.anonymizations[i].original + ' not found!');
+        continue;
+      } else if (foundIndex < lowestIndex) {
         lowestIndex = foundIndex;
         nextAnonymization = i;
       }

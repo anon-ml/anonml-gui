@@ -1,3 +1,4 @@
+import { Anonymization } from './anonymization';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, RequestOptionsArgs } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
@@ -34,13 +35,13 @@ export class HttpService {
 
   }
 
-  saveFile(editedDocument: Document): Promise<string> {
-    const url = 'api/save/' + editedDocument.id
+  saveFile(anonymizations: Anonymization[], id: string): Promise<string> {
+    const url = 'api/save/' + id
 
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return this.http.post(url, JSON.stringify(editedDocument.anonymizations), { headers: headers })
+    return this.http.post(url, JSON.stringify(anonymizations), { headers: headers })
       .toPromise().then(response => response.json() as string)
       .catch(this.handleError);
   }

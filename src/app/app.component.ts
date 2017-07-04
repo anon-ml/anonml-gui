@@ -17,7 +17,7 @@ export class AppComponent {
   title = 'AnonML';
   protected trigger = 0;
   protected fileName: string;
-  protected docId: number;
+  protected docId: string;
   protected docFileType: string;
 
   protected focusReworkArea = new EventEmitter<boolean>();
@@ -37,7 +37,10 @@ export class AppComponent {
       this.fileName = response.fileName;
       this.docId = response.id;
       this.docFileType = response.originalFileType;
-      this.anonymizationHanlderService.findNextAnonymizationParam(response.text, response.anonymizations);
+      for (let i = 0; i < response.anonymizations.length; ++i) {
+        response.anonymizations[i].id = i+1;
+      }
+      this.anonymizationHanlderService.findNextAnonymizationParam(response.displayableText, response.anonymizations);
 
     });
 
@@ -63,14 +66,8 @@ export class AppComponent {
       case 115:
         console.log('pressed s');
         if (this.anonymizationHanlderService.getActuallyReworking() === undefined) {
-          const document = new Document();
-          document.anonymizations = this.anonymizationHanlderService.getAnonymizations();
-          document.fileName = this.fileName;
-          document.id = this.docId;
-          document.originalFileType = this.docFileType;
-          document.text = this.anonymizationHanlderService.getText();
 
-          this.httpService.saveFile(document);
+          this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
         } else {
           console.log('Document not finished!');
         }

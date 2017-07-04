@@ -2,9 +2,14 @@ import { Anonymization } from './anonymization';
 
 export class Document {
 
-  id: number;
+  id: string;
   fileName: string;
-  text: string;
+
+  // ist ein array
+  text: string[];
+
+  displayableText: string;
+  fullText: string;
   originalFileType: string;
   anonymizations: Anonymization[];
 

@@ -1,19 +1,19 @@
 <div class="container-fluid">
 	<div class="row content">
-		<div *ngIf="!anonymizationHanlderService.text"
+		<div *ngIf="!anonymizationHanlderService.displayableText"
 			class="col-sm-10 sidenav">
 			<input id="input-1" type="file" class="upload-drop-zone file"
 				(change)="fileHandle($event)">
 		</div>
 		<div id="controlId" tabindex="1" [appFocusRework]="focusMainArea"
 			(keypress)="keyControl($event)"
-			*ngIf="anonymizationHanlderService.text" class="col-sm-10 sidenav">
+			*ngIf="anonymizationHanlderService.displayableText" class="col-sm-10 sidenav">
 			{{fileName}}
 			<div class="panel panel-default">
-				<div class="panel-body white" (mouseup)="getSelectionText()"
-					*ngFor="let page of anonymizationHanlderService.text">
+				<div class="panel-body white" (mouseup)="getSelectionText()">
+					<!-- *ngFor="let page of anonymizationHanlderService.displayableText"-->
 					<div
-						[innerHtml]="page | highlightAnonymization:anonymizationHanlderService.getAnonymizations():trigger"></div>
+						[innerHtml]="anonymizationHanlderService.displayableText | highlightAnonymization:anonymizationHanlderService.getAnonymizations():trigger"></div>
 				</div>
 			</div>
 			<span>{{selectedText}}</span>
@@ -33,8 +33,8 @@
 
 						</tr>
 						<tr>
-							<td><button type="button" class="btn btn-sq-sm btn-default">s</button></td>
 							<td><button type="button" class="btn btn-sq-sm btn-default">a</button></td>
+							<td><button type="button" class="btn btn-sq-sm btn-default">s</button></td>
 							<td><button type="button" class="btn btn-sq-sm btn-default">d</button></td>
 						</tr>
 					</table>
@@ -88,7 +88,7 @@
 					<tr>
 						<td><div
 								[innerHtml]="anonymizationHanlderService.generateColorForLabel(
-								anonymizationHanlderService.getActuallyReworking().Label, 
+								anonymizationHanlderService.getActuallyReworking().label, 
 								anonymizationHanlderService.getActuallyReworking().original, 
 								true)"></div></td>
 					</tr>
@@ -97,7 +97,7 @@
 					</tr>
 					<tr>
 						<td><select [appFocusRework]="focusReworkArea"
-							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().Label"
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().label"
 							class="form-control"><option
 									*ngFor="let label of anonymizationHanlderService.getLabels()">{{label}}</option>
 						</select></td>
@@ -119,7 +119,3 @@
 		</div>
 	</div>
 </div>
-
-<footer class="container-fluid">
-	<p>AnonMl for the win!</p>
-</footer>
