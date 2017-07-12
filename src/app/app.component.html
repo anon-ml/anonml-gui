@@ -7,10 +7,12 @@
 		</div>
 		<div id="controlId" tabindex="1" [appFocusRework]="focusMainArea"
 			(keypress)="keyControl($event)"
-			*ngIf="anonymizationHanlderService.displayableText" class="col-sm-10 sidenav">
-			{{fileName}}
+			*ngIf="anonymizationHanlderService.displayableText"
+			class="col-sm-10 sidenav">
+			<button type="button" class="btn btn-secondary">{{fileName}}</button>
 			<div class="panel panel-default">
-				<div class="panel-body white fixed-panel" (mouseup)="getSelectionText()">
+				<div class="panel-body white fixed-panel"
+					(mouseup)="getSelectionText()">
 					<!-- *ngFor="let page of anonymizationHanlderService.displayableText"-->
 					<div
 						[innerHtml]="anonymizationHanlderService.displayableText | highlightAnonymization:anonymizationHanlderService.getAnonymizations():trigger"></div>
@@ -48,29 +50,31 @@
 									class="btn btn-sq-lg btn-default btn-lg">a</button></td>
 							<td>
 								<h4>
-									: <b>a</b>ccept
+									:&nbsp;<b>a</b>ccept
 								</h4>
 							</td>
 						</tr>
 						<tr>
 							<td><button type="button"
 									class="btn btn-sq-lg btn-default btn-lg">d</button></td>
-							<td><h4>
-									: <b>d</b>ecline
-								</h4></td>
+							<td>
+								<h4>
+									:&nbsp;<b>d</b>ecline
+								</h4>
+							</td>
 						</tr>
 						<tr>
 							<td><button type="button"
 									class="btn btn-sq-lg btn-default btn-lg">w</button></td>
 							<td><h4>
-									: re<b>w</b>ork
+									:&nbsp;re<b>w</b>ork
 								</h4></td>
 						</tr>
 						<tr>
 							<td><button type="button"
 									class="btn btn-sq-lg btn-default btn-lg">s</button></td>
 							<td><h4>
-									: <b>s</b>ave
+									:&nbsp;<b>s</b>ave
 								</h4></td>
 						</tr>
 					</table>
