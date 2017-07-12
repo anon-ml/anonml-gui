@@ -4,7 +4,7 @@ import { Component, Input, ViewChildren, ViewChild, EventEmitter } from '@angula
 import { FileReference } from 'typescript';
 import { HttpService } from './http.service';
 import { Document } from './document';
-import { HttpModule } from '@angular/http'
+import { HttpModule } from '@angular/http';
 
 
 @Component({
@@ -38,9 +38,9 @@ export class AppComponent {
       this.docId = response.id;
       this.docFileType = response.originalFileType;
       for (let i = 0; i < response.anonymizations.length; ++i) {
-        response.anonymizations[i].id = i+1;
+        response.anonymizations[i].id = i + 1;
       }
-      this.anonymizationHanlderService.findNextAnonymizationParam(response.displayableText, response.anonymizations);
+      this.anonymizationHanlderService.setUpParams(response.displayableText, response.anonymizations);
 
     });
 

@@ -3,6 +3,7 @@ import { AnonymizationHandlerService } from './anonymization-handler.service';
 import { AppComponent } from './app.component';
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 @Pipe({
   name: 'highlightAnonymization'
@@ -25,20 +26,16 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           replacement = '<span style="background-color:rgb(255,0,0)">[]</span>';
         }
 
-        console.log('Label: ' + anonymizations[i].label);
+//        console.log('Label: ' + anonymizations[i].label);
         replacement += this.anonymizationHanlderService.generateColorForLabel(anonymizations[i].label, anonymizations[i].original, false);
 
       }
-      console.log('Replacement: ' + replacement)
-      newValue = newValue.replace(new RegExp(this.escape(anonymizations[i].original), 'g'), replacement);
+//      console.log('Replacement: ' + replacement)
+      newValue = newValue.replace(new RegExp(
+        this.anonymizationHanlderService.formRegexFromOriginal(anonymizations[i].original), 'g'), replacement);
     }
     return this.sanitizer.bypassSecurityTrustHtml(newValue);
   }
-
-  escape(str: string): string {
-    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-  }
-
   constructor(private anonymizationHanlderService: AnonymizationHandlerService, private sanitizer: DomSanitizer) { }
 
 }

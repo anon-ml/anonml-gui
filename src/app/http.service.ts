@@ -1,7 +1,7 @@
 import { Anonymization } from './anonymization';
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, RequestOptionsArgs } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import { Observable, } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 import { Document } from './document';
 
@@ -35,15 +35,17 @@ export class HttpService {
 
   }
 
-  saveFile(anonymizations: Anonymization[], id: string): Promise<string> {
-    const url = 'api/save/' + id
-
+  saveFile(anonymizations: Anonymization[], id: string): void {
+    const url = '/api/update/anonymizations/' + id;
     const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
 
-    return this.http.post(url, JSON.stringify(anonymizations), { headers: headers })
-      .toPromise().then(response => response.json() as string)
+
+    headers.append('Content-Type', 'application/json');
+    this.http.post(url, JSON.stringify(anonymizations), { headers: headers })
+      .toPromise().then(Response => {window.location.replace('api/save/' + id)})
       .catch(this.handleError);
+
+
   }
 
   private handleError(error: any): Promise<any> {

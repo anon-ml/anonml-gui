@@ -10,7 +10,7 @@
 			*ngIf="anonymizationHanlderService.displayableText" class="col-sm-10 sidenav">
 			{{fileName}}
 			<div class="panel panel-default">
-				<div class="panel-body white" (mouseup)="getSelectionText()">
+				<div class="panel-body white fixed-panel" (mouseup)="getSelectionText()">
 					<!-- *ngFor="let page of anonymizationHanlderService.displayableText"-->
 					<div
 						[innerHtml]="anonymizationHanlderService.displayableText | highlightAnonymization:anonymizationHanlderService.getAnonymizations():trigger"></div>

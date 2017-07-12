@@ -58,7 +58,7 @@ export class AnonymizationHandlerService {
     this.temporaryAnonymization.push(this.actuallyReworking);
   }
 
-  findNextAnonymizationParam(displayableText: string, anonymizations: Anonymization[]): void {
+  setUpParams(displayableText: string, anonymizations: Anonymization[]): void {
 
     this.displayableText = displayableText;
     this.anonymizations = anonymizations;
@@ -86,9 +86,8 @@ export class AnonymizationHandlerService {
       if (this.getAllTouchedAnonymizations().includes(this.anonymizations[i].id)) {
         continue;
       }
-      foundIndex = this.displayableText.indexOf(this.anonymizations[i].original);
-      console.log(this.anonymizations[i].original + ' -- ' + foundIndex);
-      // TODO: problem, da aktuell nix gefunden wird..
+      const regex = this.formRegexFromOriginal(this.anonymizations[i].original);
+      foundIndex = this.displayableText.search(new RegExp(regex));
       if (foundIndex === -1) {
         console.log(this.anonymizations[i].original + ' not found!');
         continue;
@@ -101,6 +100,12 @@ export class AnonymizationHandlerService {
       this.actuallyReworking = null;
     }
     this.actuallyReworking = this.anonymizations[nextAnonymization];
+  }
+
+  formRegexFromOriginal(original: string) {
+    original = original.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+    original = original.replace(/(\s)+/g, '((\\s)+|(<br>)+)');
+    return original;
   }
 
   acceptedActualAnonymization(): void {
