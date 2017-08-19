@@ -86,10 +86,10 @@ export class AnonymizationHandlerService {
       if (this.getAllTouchedAnonymizations().includes(this.anonymizations[i].id)) {
         continue;
       }
-      const regex = this.formRegexFromOriginal(this.anonymizations[i].original);
+      const regex = this.formRegexFromOriginal(this.anonymizations[i].data.original);
       foundIndex = this.displayableText.search(new RegExp(regex));
       if (foundIndex === -1) {
-        console.log(this.anonymizations[i].original + ' not found!');
+        console.log(this.anonymizations[i].data.original + ' not found!');
         continue;
       } else if (foundIndex < lowestIndex) {
         lowestIndex = foundIndex;

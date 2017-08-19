@@ -92,8 +92,8 @@
 					<tr>
 						<td><div
 								[innerHtml]="anonymizationHanlderService.generateColorForLabel(
-								anonymizationHanlderService.getActuallyReworking().label, 
-								anonymizationHanlderService.getActuallyReworking().original, 
+								anonymizationHanlderService.getActuallyReworking().data.label, 
+								anonymizationHanlderService.getActuallyReworking().data.original, 
 								true)"></div></td>
 					</tr>
 					<tr>
@@ -101,7 +101,7 @@
 					</tr>
 					<tr>
 						<td><select [appFocusRework]="focusReworkArea"
-							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().label"
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().data.label"
 							class="form-control"><option
 									*ngFor="let label of anonymizationHanlderService.getLabels()">{{label}}</option>
 						</select></td>
@@ -111,7 +111,7 @@
 					</tr>
 					<tr>
 						<td><input type="text" class="form-control" id="ersetzung"
-							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().replacement"></td>
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().data.replacement"></td>
 					</tr>
 
 
