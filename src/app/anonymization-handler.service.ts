@@ -103,8 +103,9 @@ export class AnonymizationHandlerService {
   }
 
   formRegexFromOriginal(original: string) {
-    original = original.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
-    original = original.replace(/(\s)+/g, '((\\s)+|(<br>)+)');
+    original = original.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+    original = original.replace(/\n/g, '<br/>');
+//    original = original.replace(/(\s)+/g, '((\\s)+|(<br>)+)');
     return original;
   }
 

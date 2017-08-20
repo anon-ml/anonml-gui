@@ -26,12 +26,12 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           replacement = '<span style="background-color:rgb(255,0,0)">[]</span>';
         }
 
-        //        console.log('Label: ' + anonymizations[i].label);
+        // console.log('Label: ' + anonymizations[i].label);
         replacement += this.anonymizationHanlderService.generateColorForLabel(anonymizations[i].data.label,
-          anonymizations[i].data.original, false);
+          anonymizations[i].data.original.replace(/\n/g, '<br/>'), false);
 
       }
-      //      console.log('Replacement: ' + replacement)
+      // console.log('Replacement: ' + replacement)
       newValue = newValue.replace(new RegExp(
         this.anonymizationHanlderService.formRegexFromOriginal(anonymizations[i].data.original), 'g'), replacement);
     }
