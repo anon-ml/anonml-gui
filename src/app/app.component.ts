@@ -94,18 +94,18 @@ export class AppComponent {
 
   getSelectionText(): void {
     console.log('getSelectionText Entered.');
-    let t;
+    let selectedText;
     if (window.getSelection) {
-      t = window.getSelection();
+      selectedText = window.getSelection();
     } else if (document.getSelection) {
-      t = document.getSelection();
+      selectedText = document.getSelection();
     }
     // first check for wrong selections
-    if (String(t) === '' || String(t) === ' ') {
+    if (String(selectedText) === '' || String(selectedText) === ' ') {
       return;
     }
     this.tempAnonymization = new Anonymization();
-    this.tempAnonymization.original = t.toString();
+    this.tempAnonymization.data.original = selectedText.toString();
     this.tempAnonymization.Producer = 'HUMAN';
     this.tempAnonymization.id = this.anonymizationHanlderService.getMaxId() + 1;
     this.anonymizationHanlderService.setActualleReworking(this.tempAnonymization);
