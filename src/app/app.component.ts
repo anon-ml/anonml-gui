@@ -106,7 +106,7 @@ export class AppComponent {
     }
     this.tempAnonymization = new Anonymization();
     this.tempAnonymization.data.original = selectedText.toString();
-    this.tempAnonymization.Producer = 'HUMAN';
+    this.tempAnonymization.producer = 'HUMAN';
     this.tempAnonymization.id = this.anonymizationHanlderService.getMaxId() + 1;
     this.anonymizationHanlderService.setActualleReworking(this.tempAnonymization);
     this.anonymizationHanlderService.setTemporatyAnonymization();
