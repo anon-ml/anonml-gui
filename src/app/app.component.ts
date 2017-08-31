@@ -66,9 +66,13 @@ export class AppComponent {
       case 115:
         console.log('pressed s');
         if (this.anonymizationHanlderService.getActuallyReworking() === undefined) {
+          if (window.confirm('Wirklich fertig?')) {
+            this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
+            this.anonymizationHanlderService.resetDisplayableText();
+          }
 
-          this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
         } else {
+          window.alert('Es sind noch offene Anonymisierungen vorhanden!')
           console.log('Document not finished!');
         }
 

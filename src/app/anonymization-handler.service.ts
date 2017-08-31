@@ -17,6 +17,14 @@ export class AnonymizationHandlerService {
   protected displayableText: string;
   protected anonymizations: Anonymization[];
 
+  resetDisplayableText(): void {
+    this.acceptedAnonymizations.length = 0;
+    this.reworkedAnonymizations.length = 0;
+    this.declinedAnonymizations.length = 0;
+    this.addedAnonymizations.length = 0;
+    this.anonymizations.length = 0;
+    this.displayableText = '';
+  }
   getText(): string {
     return this.displayableText;
   }
