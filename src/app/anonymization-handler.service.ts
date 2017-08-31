@@ -1,7 +1,7 @@
-import { Anonymization } from './anonymization';
-import { HttpService } from './http.service';
-import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import {Anonymization} from './anonymization';
+import {HttpService} from './http.service';
+import {Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Injectable()
 export class AnonymizationHandlerService {
@@ -52,8 +52,53 @@ export class AnonymizationHandlerService {
     if (indexOfLabel === -1) {
       replacement += '<span style="background-color:rgb( 255 , 255, 255)">' + original + '</span>'
     } else {
-      replacement += '<span style="background-color:rgb( 0 , ' + (255 - (indexOfLabel * 25) % 255) + ', '
-        + ((indexOfLabel * 25) % 255) + ')">' + original + '</span>'
+      replacement += '<span style="background-color:';
+      switch (indexOfLabel) {
+        case 0:
+          replacement += 'rgb(60, 180, 75)';
+          break;
+        case 1:
+          replacement += 'rgb(255, 225, 25)';
+          break;
+        case 2:
+          replacement += 'rgb(0, 130, 200)';
+          break;
+        case 3:
+          replacement += 'rgb(245, 130, 48)';
+          break;
+        case 4:
+          replacement += 'rgb(250, 190, 190)';
+          break;
+        case 5:
+          replacement += 'rgb(230, 190, 255)';
+          break;
+        case 6:
+          replacement += 'rgb(255, 250, 200)';
+          break;
+        case 7:
+          replacement += 'rgb(170, 255, 195)';
+          break;
+        case 8:
+          replacement += 'rgb(128, 128, 0) ';
+          break;
+        case 9:
+          replacement += 'rgb(210, 245, 60)';
+          break;
+        case 10:
+          replacement += 'rgb(0, 128, 128)';
+          break;
+        case 11:
+          replacement += 'rgb(240, 50, 230)';
+          break;
+        default:
+          replacement += 'rgb(255, 215, 180)';
+          break;
+      }
+
+
+      //  0 , ' + (255 - (indexOfLabel * 50) % 255) + ', ' + ((indexOfLabel * 50) % 255)
+
+      replacement += '">' + original + '</span>';
     }
     if (asHTML) {
       return this.sanitizer.bypassSecurityTrustHtml(replacement);
@@ -113,7 +158,7 @@ export class AnonymizationHandlerService {
   formRegexFromOriginal(original: string) {
     original = original.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     original = original.replace(/\n/g, '<br/>');
-//    original = original.replace(/(\s)+/g, '((\\s)+|(<br>)+)');
+    //    original = original.replace(/(\s)+/g, '((\\s)+|(<br>)+)');
     return original;
   }
 

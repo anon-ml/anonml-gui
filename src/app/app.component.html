@@ -119,6 +119,14 @@
 
 				<a>Just hit 'Enter' to accept the changes!</a>
 
+				<hr>
+				<h4>Farblegende:</h4>
+				<ul>
+					<li *ngFor="let label of anonymizationHanlderService.getLabels()">
+						<div
+							[innerHtml]="anonymizationHanlderService.generateColorForLabel(label,label,true)"></div>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>

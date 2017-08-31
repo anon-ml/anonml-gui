@@ -23,13 +23,16 @@ export class HighlightAnonymizationPipe implements PipeTransform {
       } else {
 
         if (anonymizations[i].id === this.anonymizationHanlderService.getActuallyReworking().id) {
-          replacement = '<span style="background-color:rgb(255,0,0)">[]</span>';
+          replacement = '<span style="background-color:rgb(255,0,0)">O</span>';
         }
 
         // console.log('Label: ' + anonymizations[i].label);
         replacement += this.anonymizationHanlderService.generateColorForLabel(anonymizations[i].data.label,
           anonymizations[i].data.original.replace(/\n/g, '<br/>'), false);
 
+        if (anonymizations[i].id === this.anonymizationHanlderService.getActuallyReworking().id) {
+          replacement += '<span style="background-color:rgb(255,0,0)">O</span>';
+        }
       }
       // console.log('Replacement: ' + replacement)
       newValue = newValue.replace(new RegExp(
