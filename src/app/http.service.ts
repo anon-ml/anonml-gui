@@ -1,10 +1,9 @@
-import { Anonymization } from './anonymization';
-import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, RequestOptionsArgs } from '@angular/http';
-import { Observable, } from 'rxjs/Rx';
+import {Anonymization} from './anonymization';
+import {Injectable} from '@angular/core';
+import {Http, Headers, RequestOptions, RequestOptionsArgs} from '@angular/http';
+import {Observable, } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
-import { Document } from './document';
-
+import {Document} from './document';
 
 @Injectable()
 export class HttpService {
@@ -12,18 +11,26 @@ export class HttpService {
   private headers = new Headers({});
   options: RequestOptionsArgs = new RequestOptions();
 
-  constructor(private http: Http) { }
+  constructor(private http: Http) {}
 
+  /**
+   * Loads all labels from the backend to have the actual ones
+   * @return Promise<string[]> a promise containing a list of strings (label names)
+   */
   getLabels(): Promise<string[]> {
     const url = '/api/labels';
     return this.http.get(url).toPromise().then(response => response.json() as String[]).catch(this.handleError);
   }
 
-
+  /**
+   * Sends the uploaded file as formData and get back the processed file as document object to display it
+   * @param files the actually uploaded file/s
+   * @return Promise<Document> a promise containing the processed file as Document object
+   */
   postFile(files): Promise<Document> {
     const url = '/api/upload';
     const formData: FormData = new FormData();
-    this.options.headers = new Headers(); // 'Content-Type': 'multipart/form-data'
+    this.options.headers = new Headers();
 
     for (let i = 0; i < files.length; i++) {
       formData.append('file', files[i]);
@@ -35,13 +42,19 @@ export class HttpService {
 
   }
 
+  /**
+   * Sends the manually reworked anonymizations to the backend to update the document.
+   * Additionally calls the api path for the export of the anonymized document.
+   * @param anonymizations a list of updated and added anonymizations
+   * @param id of the document in progress
+   */
   saveFile(anonymizations: Anonymization[], id: string): void {
     const url = '/api/update/anonymizations/' + id;
     const headers = new Headers();
 
 
     headers.append('Content-Type', 'application/json');
-    this.http.post(url, JSON.stringify(anonymizations), { headers: headers })
+    this.http.post(url, JSON.stringify(anonymizations), {headers: headers})
       .toPromise().then(Response => {window.location.replace('api/save/' + id)})
       .catch(this.handleError);
 

@@ -10,6 +10,17 @@ import {textChangeRangeIsUnchanged} from 'typescript';
 })
 export class HighlightAnonymizationPipe implements PipeTransform {
 
+  /**
+   * Finds the originals of the anonymizations from the list (with regex) and replaces them in the
+   * displayable text by a <span> element to set a background color according to the Label of the
+   * anonymization. If the anonymization is the next one then there
+   * are added red marks before and after to mark the actually looked at.
+   *
+   * @param value is the text which is actually piped in the view
+   * @param anonymizations is the list of anonymizations which should be highlighted
+   * @param trigger a number which is incremented to trigger the pipe function
+   * @return html with the originals replaced by the <span> object to highlight it
+   */
   transform(value: string, anonymizations: Anonymization[], trigger: number): SafeHtml {
     console.log('Pipe highlightAnonymization entered.');
     let newValue = value;
@@ -26,7 +37,6 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           replacement = '<span style="background-color:rgb(255,0,0)">O</span>';
         }
 
-        // console.log('Label: ' + anonymizations[i].label);
         replacement += this.anonymizationHanlderService.generateColorForLabel(anonymizations[i].data.label,
           anonymizations[i].data.original.replace(/\n/g, '<br/>'), false);
 
@@ -34,12 +44,13 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           replacement += '<span style="background-color:rgb(255,0,0)">O</span>';
         }
       }
-      // console.log('Replacement: ' + replacement)
       newValue = newValue.replace(new RegExp(
         this.anonymizationHanlderService.formRegexFromOriginal(anonymizations[i].data.original), 'g'), replacement);
     }
     return this.sanitizer.bypassSecurityTrustHtml(newValue);
   }
+
+
   constructor(private anonymizationHanlderService: AnonymizationHandlerService, private sanitizer: DomSanitizer) {}
 
 }

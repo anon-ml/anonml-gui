@@ -3,6 +3,7 @@ import {HttpService} from './http.service';
 import {Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 
+
 @Injectable()
 export class AnonymizationHandlerService {
 
@@ -17,6 +18,9 @@ export class AnonymizationHandlerService {
   protected displayableText: string;
   protected anonymizations: Anonymization[];
 
+  /**
+   * Resets the loaded document after it is saved and exported to start over with another one.
+   */
   resetDisplayableText(): void {
     this.acceptedAnonymizations.length = 0;
     this.reworkedAnonymizations.length = 0;
@@ -35,6 +39,10 @@ export class AnonymizationHandlerService {
     return this.acceptedAnonymizations.concat(this.reworkedAnonymizations, this.addedAnonymizations);
   }
 
+  /**
+   * Sets a given anonymization as actually reworking to be able to rework an newly added one.
+   * @param actual given anonymization to set as actuallyReworking
+   */
   setActualleReworking(actual: Anonymization): void {
     this.actuallyReworking = actual;
   }
@@ -46,6 +54,13 @@ export class AnonymizationHandlerService {
     return this.allLabels;
   }
 
+  /**
+   * Generates a <span> element with different background colors based on the index of the given label
+   * @param label one of the loaded labels (e.g. Person, Organization) which the color bases on
+   * @param original the word(-sequence) which is placed in the <span>
+   * @param asHTML directly sanitize as HTML or not
+   * @return a string or a HTML based on the asHTML parameter
+   */
   generateColorForLabel(label: string, original: string, asHTML: boolean) {
     let replacement = '';
     const indexOfLabel = this.allLabels.indexOf(label)
@@ -118,6 +133,10 @@ export class AnonymizationHandlerService {
     this.findNextAnonymization();
   }
 
+  /**
+   * Finds the maximal id of the anonymizations in the anonymization list
+   * @return the highest id of the anonymizations
+   */
   getMaxId(): number {
     let highestIndex = 0;
     let id;
@@ -130,6 +149,12 @@ export class AnonymizationHandlerService {
     return highestIndex;
   }
 
+  /**
+   * Finds the anonymization from the anonymizations list which comes next in the displayableText.
+   * Basically looks after the lowest index of the originals with pattern search. This should
+   * help to go from top to bottom through the text. When the lowest is found it is set as
+   * actuallyReworking.
+   */
   findNextAnonymization(): void {
     console.log('findNextAnonymization accessed.');
     let lowestIndex = Number.MAX_VALUE;
@@ -155,6 +180,12 @@ export class AnonymizationHandlerService {
     this.actuallyReworking = this.anonymizations[nextAnonymization];
   }
 
+  /**
+   * Escapes all special characters contained in the original, also replaces all "\n" with <br/>
+   * to find it in the displayable text
+   * @param original the original of an anonymization to generate the regex from
+   * @return the formed regex
+   */
   formRegexFromOriginal(original: string) {
     original = original.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     original = original.replace(/\n/g, '<br/>');
@@ -162,6 +193,10 @@ export class AnonymizationHandlerService {
     return original;
   }
 
+  /**
+   * Pushes the accepted anonymization to the accepted list and
+   * searches the next one in the text (called if 'a' is pressed)
+   */
   acceptedActualAnonymization(): void {
     console.log('Accepted!');
     if (this.actuallyReworking == null) {
@@ -172,6 +207,11 @@ export class AnonymizationHandlerService {
     this.findNextAnonymization();
   }
 
+  /**
+   * Pushes the declined anonymization to the declined list, removes it from
+   * the anonymization list and searches the next one in the text
+   * (called if 'd' is pressed)
+   */
   declineActualAnonymization(): void {
     if (this.actuallyReworking == null) {
       console.log('Document finished!');
@@ -183,6 +223,10 @@ export class AnonymizationHandlerService {
     this.findNextAnonymization();
   }
 
+  /**
+   * Pushes the actual anonymization to the reworked list and searches the next.
+   * (called if 'enter' is pressed after going to the rework zone)
+   */
   reworkedActualAnonymization(): void {
     if (this.actuallyReworking == null) {
       console.log('Document finished!');
@@ -192,6 +236,11 @@ export class AnonymizationHandlerService {
     this.findNextAnonymization();
   }
 
+  /**
+   * Adds the newly added anonymization to the anonymization list and searches the next.
+   * (called if 'enter' is pressed after going to the rework zone and
+   * the actually reworking has a id which is the highst + 1)
+   */
   addedNewAnonymization(): void {
     this.anonymizations.push(this.actuallyReworking);
     this.addedAnonymizations.push(this.actuallyReworking.id);

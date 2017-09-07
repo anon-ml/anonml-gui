@@ -1,10 +1,10 @@
-import { Anonymization } from './anonymization';
-import { AnonymizationHandlerService } from './anonymization-handler.service';
-import { Component, Input, ViewChildren, ViewChild, EventEmitter } from '@angular/core';
-import { FileReference } from 'typescript';
-import { HttpService } from './http.service';
-import { Document } from './document';
-import { HttpModule } from '@angular/http';
+import {Anonymization} from './anonymization';
+import {AnonymizationHandlerService} from './anonymization-handler.service';
+import {Component, Input, ViewChildren, ViewChild, EventEmitter} from '@angular/core';
+import {FileReference} from 'typescript';
+import {HttpService} from './http.service';
+import {Document} from './document';
+import {HttpModule} from '@angular/http';
 
 
 @Component({
@@ -29,6 +29,10 @@ export class AppComponent {
     this.trigger++;
   }
 
+  /**
+   * Uploads the file to the backend and sets up the needed elements from the response
+   * @param event contains the uploaded files
+   */
   fileHandle(event): void {
     const files = event.target.files || event.srcElement.files;
     console.log(files);
@@ -46,6 +50,10 @@ export class AppComponent {
 
   }
 
+  /**
+   * Handles the operations on keypress (like a for accept)
+   * @param event the catched keyboard event to check which key is pressed
+   */
   keyControl(event: KeyboardEvent): void {
     switch (event.charCode) {
       case 97:
@@ -82,6 +90,10 @@ export class AppComponent {
     }
   }
 
+  /**
+   * Sets the focus back to the main area if 'enter' was pressed in the rework area.
+   * In addition calls the necessary handler function for the reworked or added anonymization.
+   */
   enterRework(): void {
     console.log('Hit Enter!');
     this.focusMainArea.emit(true);
@@ -95,7 +107,10 @@ export class AppComponent {
     this.updatePipe();
   }
 
-
+  /**
+   * Sets up a new anonymization with HUMAN as producer if something of the text
+   * is selected.
+   */
   getSelectionText(): void {
     console.log('getSelectionText Entered.');
     let selectedText;

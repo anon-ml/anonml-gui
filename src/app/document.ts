@@ -5,7 +5,6 @@ export class Document {
   id: string;
   fileName: string;
 
-  // ist ein array
   text: string[];
 
   displayableText: string;
