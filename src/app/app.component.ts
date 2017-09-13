@@ -125,8 +125,12 @@ export class AppComponent {
     }
     this.tempAnonymization = new Anonymization();
     this.tempAnonymization.data.original = selectedText.toString();
+    this.tempAnonymization.data.label = 'UNKNOWN';
+    this.tempAnonymization.data.replacement = '';
     this.tempAnonymization.producer = 'HUMAN';
+    this.tempAnonymization.status = 'PROCESSING';
     this.tempAnonymization.id = this.anonymizationHanlderService.getMaxId() + 1;
+
     this.anonymizationHanlderService.setActualleReworking(this.tempAnonymization);
     this.anonymizationHanlderService.setTemporatyAnonymization();
     this.updatePipe();

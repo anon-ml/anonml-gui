@@ -29,8 +29,12 @@ export class HighlightAnonymizationPipe implements PipeTransform {
     for (let i = 0; i < anonymizations.length; ++i) {
       replacement = '';
 
-      if (this.anonymizationHanlderService.getAllTouchedAnonymizations().includes(anonymizations[i].id)) {
+      if (this.anonymizationHanlderService.findAnonymizationsByStatus('ACCEPTED').includes(anonymizations[i].id)) {
         replacement = '<span style="background-color:DarkGrey">' + anonymizations[i].data.replacement + '</span>'
+
+      } else if (this.anonymizationHanlderService.findAnonymizationsByStatus('DECLINED').includes(anonymizations[i].id)) {
+        replacement = '<span style="background-color:rgb(242, 250, 255)">' + anonymizations[i].data.original + '</span>'
+
       } else {
 
         if (anonymizations[i].id === this.anonymizationHanlderService.getActuallyReworking().id) {

@@ -2,6 +2,7 @@ import {Anonymization} from './anonymization';
 import {HttpService} from './http.service';
 import {Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
+import {forEachChild} from 'typescript';
 
 
 @Injectable()
@@ -9,10 +10,6 @@ export class AnonymizationHandlerService {
 
   private actuallyReworking: Anonymization;
   private allLabels: string[];
-  private acceptedAnonymizations: number[] = [];
-  private reworkedAnonymizations: number[] = [];
-  private declinedAnonymizations: number[] = [];
-  private addedAnonymizations: number[] = [];
   private temporaryAnonymization: Anonymization[] = [];
 
   protected displayableText: string;
@@ -22,21 +19,37 @@ export class AnonymizationHandlerService {
    * Resets the loaded document after it is saved and exported to start over with another one.
    */
   resetDisplayableText(): void {
-    this.acceptedAnonymizations.length = 0;
-    this.reworkedAnonymizations.length = 0;
-    this.declinedAnonymizations.length = 0;
-    this.addedAnonymizations.length = 0;
+
     this.anonymizations.length = 0;
     this.displayableText = '';
   }
+
   getText(): string {
     return this.displayableText;
   }
+
   getAnonymizations(): Anonymization[] {
+
     return this.anonymizations.concat(this.temporaryAnonymization);
   }
-  getAllTouchedAnonymizations(): number[] {
-    return this.acceptedAnonymizations.concat(this.reworkedAnonymizations, this.addedAnonymizations);
+
+  /**
+   * Finds all of the processed anonymizations which are labeled with the given status.
+   * @param status labeled status to search for
+   * @return list with id's which have the given status
+   */
+  findAnonymizationsByStatus(status: string): number[] {
+
+    const foundAnonymizations: number[] = [];
+    const allAnonymizations: Anonymization[] = this.getAnonymizations();
+
+    for (let i = 0; i < allAnonymizations.length; ++i) {
+      if (allAnonymizations[i].status === status) {
+        foundAnonymizations.push(allAnonymizations[i].id);
+      }
+    }
+
+    return foundAnonymizations;
   }
 
   /**
@@ -46,6 +59,7 @@ export class AnonymizationHandlerService {
   setActualleReworking(actual: Anonymization): void {
     this.actuallyReworking = actual;
   }
+
   getActuallyReworking(): Anonymization {
     return this.actuallyReworking;
   }
@@ -110,9 +124,6 @@ export class AnonymizationHandlerService {
           break;
       }
 
-
-      //  0 , ' + (255 - (indexOfLabel * 50) % 255) + ', ' + ((indexOfLabel * 50) % 255)
-
       replacement += '">' + original + '</span>';
     }
     if (asHTML) {
@@ -127,7 +138,6 @@ export class AnonymizationHandlerService {
   }
 
   setUpParams(displayableText: string, anonymizations: Anonymization[]): void {
-
     this.displayableText = displayableText;
     this.anonymizations = anonymizations;
     this.findNextAnonymization();
@@ -161,7 +171,8 @@ export class AnonymizationHandlerService {
     let foundIndex;
     let nextAnonymization = -1;
     for (let i = 0; i < this.anonymizations.length; ++i) {
-      if (this.getAllTouchedAnonymizations().includes(this.anonymizations[i].id)) {
+      if (this.findAnonymizationsByStatus('DECLINED').concat(this.findAnonymizationsByStatus('ACCEPTED'))
+        .includes(this.anonymizations[i].id)) {
         continue;
       }
       const regex = this.formRegexFromOriginal(this.anonymizations[i].data.original);
@@ -189,7 +200,6 @@ export class AnonymizationHandlerService {
   formRegexFromOriginal(original: string) {
     original = original.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     original = original.replace(/\n/g, '<br/>');
-    //    original = original.replace(/(\s)+/g, '((\\s)+|(<br>)+)');
     return original;
   }
 
@@ -203,7 +213,7 @@ export class AnonymizationHandlerService {
       console.log('Document finished!');
       return;
     }
-    this.acceptedAnonymizations.push(this.actuallyReworking.id);
+    this.actuallyReworking.status = 'ACCEPTED';
     this.findNextAnonymization();
   }
 
@@ -218,8 +228,7 @@ export class AnonymizationHandlerService {
       return;
     }
     const index = this.anonymizations.indexOf(this.actuallyReworking);
-    this.declinedAnonymizations.push(this.actuallyReworking.id);
-    this.anonymizations.splice(index, 1);
+    this.actuallyReworking.status = 'DECLINED';
     this.findNextAnonymization();
   }
 
@@ -232,7 +241,7 @@ export class AnonymizationHandlerService {
       console.log('Document finished!');
       return;
     }
-    this.reworkedAnonymizations.push(this.actuallyReworking.id);
+    this.actuallyReworking.status = 'ACCEPTED';
     this.findNextAnonymization();
   }
 
@@ -242,8 +251,8 @@ export class AnonymizationHandlerService {
    * the actually reworking has a id which is the highst + 1)
    */
   addedNewAnonymization(): void {
+    this.actuallyReworking.status = 'ACCEPTED';
     this.anonymizations.push(this.actuallyReworking);
-    this.addedAnonymizations.push(this.actuallyReworking.id);
     this.findNextAnonymization();
     this.temporaryAnonymization.length = 0;
   }
