@@ -8,6 +8,8 @@ import {Document} from './document';
 @Injectable()
 export class HttpService {
 
+  private exportAccessed = false;
+  private lockedExport = false;
   private headers = new Headers({});
   options: RequestOptionsArgs = new RequestOptions();
 
@@ -49,16 +51,32 @@ export class HttpService {
    * @param id of the document in progress
    */
   saveFile(anonymizations: Anonymization[], id: string): void {
+    this.lockedExport = true;
     const url = '/api/update/anonymizations/' + id;
     const headers = new Headers();
 
 
     headers.append('Content-Type', 'application/json');
     this.http.post(url, JSON.stringify(anonymizations), {headers: headers})
-      .toPromise().then(Response => {window.location.replace('api/save/' + id)})
+      .toPromise().then(Response => {
+        this.lockedExport = false;
+        if (this.exportAccessed) {
+          this.exportFile(id);
+
+        }
+      })
       .catch(this.handleError);
 
 
+  }
+
+  exportFile(id: string): void {
+    if (this.lockedExport) {
+      this.exportAccessed = true;
+      return;
+    }
+    window.location.replace('api/save/' + id)
+    this.exportAccessed = false;
   }
 
   private handleError(error: any): Promise<any> {

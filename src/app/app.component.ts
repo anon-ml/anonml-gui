@@ -60,6 +60,7 @@ export class AppComponent {
         console.log('pressed a');
         this.anonymizationHanlderService.acceptedActualAnonymization();
         this.updatePipe();
+        this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
         break;
       case 119:
         console.log('pressed w');
@@ -70,12 +71,13 @@ export class AppComponent {
         console.log('pressed d');
         this.anonymizationHanlderService.declineActualAnonymization();
         this.updatePipe();
+        this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
         break;
       case 115:
         console.log('pressed s');
         if (this.anonymizationHanlderService.getActuallyReworking() === undefined) {
           if (window.confirm('Wirklich fertig?')) {
-            this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
+            this.httpService.exportFile(this.docId);
             this.anonymizationHanlderService.resetDisplayableText();
           }
 
@@ -105,6 +107,7 @@ export class AppComponent {
     }
 
     this.updatePipe();
+    this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
   }
 
   /**
