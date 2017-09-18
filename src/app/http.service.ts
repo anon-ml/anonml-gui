@@ -25,6 +25,15 @@ export class HttpService {
   }
 
   /**
+ * Loads all labels from the backend to have the actual ones
+ * @return Promise<string[]> a promise containing a list of strings (label names)
+ */
+  getDocument(id: string): Promise<Document> {
+    const url = '/api/document/' + id;
+    return this.http.get(url).toPromise().then(response => response.json() as Document).catch(this.handleError);
+  }
+
+  /**
    * Sends the uploaded file as formData and get back the processed file as document object to display it
    * @param files the actually uploaded file/s
    * @return Promise<Document> a promise containing the processed file as Document object

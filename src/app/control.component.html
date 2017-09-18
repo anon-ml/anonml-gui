@@ -1,0 +1,133 @@
+<div class="container-fluid">
+	<div class="row content">
+		<div *ngIf="!anonymizationHanlderService.displayableText"
+			class="col-sm-10 sidenav">
+			<input id="input-1" type="file" class="upload-drop-zone file"
+				(change)="fileHandle($event)">
+		</div>
+		<div id="controlId" tabindex="1" [appFocusRework]="focusMainArea"
+			(keypress)="keyControl($event)"
+			*ngIf="anonymizationHanlderService.displayableText"
+			class="col-sm-10 sidenav">
+			<button type="button" class="btn btn-secondary">{{fileName}}</button>
+			<div class="panel panel-default">
+				<div class="panel-body white fixed-panel"
+					(mouseup)="getSelectionText()">
+					<!-- *ngFor="let page of anonymizationHanlderService.displayableText"-->
+					<div
+						[innerHtml]="anonymizationHanlderService.displayableText | highlightAnonymization:anonymizationHanlderService.getAnonymizations():trigger"></div>
+				</div>
+			</div>
+			<span>{{selectedText}}</span>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-5">
+					<h4>Steuerung:</h4>
+				</div>
+				<div class="col-sm-1"></div>
+				<div class="col-sm-5">
+					<table>
+						<tr>
+							<td></td>
+							<td><button type="button" class="btn btn-sq-sm btn-default">w</button></td>
+							<td></td>
+
+						</tr>
+						<tr>
+							<td><button type="button" class="btn btn-sq-sm btn-default">a</button></td>
+							<td><button type="button" class="btn btn-sq-sm btn-default">s</button></td>
+							<td><button type="button" class="btn btn-sq-sm btn-default">d</button></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					<table>
+						<tr>
+							<td><button type="button"
+									class="btn btn-sq-lg btn-default btn-lg">a</button></td>
+							<td>
+								<h4>
+									:&nbsp;<b>a</b>ccept
+								</h4>
+							</td>
+						</tr>
+						<tr>
+							<td><button type="button"
+									class="btn btn-sq-lg btn-default btn-lg">d</button></td>
+							<td>
+								<h4>
+									:&nbsp;<b>d</b>ecline
+								</h4>
+							</td>
+						</tr>
+						<tr>
+							<td><button type="button"
+									class="btn btn-sq-lg btn-default btn-lg">w</button></td>
+							<td><h4>
+									:&nbsp;re<b>w</b>ork
+								</h4></td>
+						</tr>
+						<tr>
+							<td><button type="button"
+									class="btn btn-sq-lg btn-default btn-lg">s</button></td>
+							<td><h4>
+									:&nbsp;<b>s</b>ave
+								</h4></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<hr>
+			<div *ngIf="anonymizationHanlderService.getActuallyReworking()"
+				(keyup.enter)="enterRework()">
+				<table>
+					<tr>
+						<td><h4>Annotation:</h4></td>
+					</tr>
+
+					<tr>
+						<td><div
+								[innerHtml]="anonymizationHanlderService.generateColorForLabel(
+								anonymizationHanlderService.getActuallyReworking().data.label, 
+								anonymizationHanlderService.getActuallyReworking().data.original, 
+								true)"></div></td>
+					</tr>
+					<tr>
+						<td><h3>Label:</h3></td>
+					</tr>
+					<tr>
+						<td><select [appFocusRework]="focusReworkArea"
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().data.label"
+							class="form-control"><option
+									*ngFor="let label of anonymizationHanlderService.getLabels()">{{label}}</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td><h3>Ersetzung:</h3></td>
+					</tr>
+					<tr>
+						<td><input type="text" class="form-control" id="ersetzung"
+							[(ngModel)]="anonymizationHanlderService.getActuallyReworking().data.replacement"></td>
+					</tr>
+
+
+				</table>
+
+				<a>Just hit 'Enter' to accept the changes!</a>
+
+				<hr>
+				<h4>Farblegende:</h4>
+				<ul>
+					<li *ngFor="let label of anonymizationHanlderService.getLabels()">
+						<div
+							[innerHtml]="anonymizationHanlderService.generateColorForLabel(label,label,true)"></div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
