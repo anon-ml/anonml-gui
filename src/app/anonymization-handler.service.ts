@@ -33,6 +33,29 @@ export class AnonymizationHandlerService {
     return this.anonymizations.concat(this.temporaryAnonymization);
   }
 
+  findAnonymizationById(id: number): number {
+
+    for (let i = 0; i < this.anonymizations.length; ++i) {
+      if (id === this.anonymizations[i].id) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  reActivateAnonymization(id: number): boolean {
+
+    const index = this.findAnonymizationById(id);
+    console.log('found index: ' + index);
+    if (this.anonymizations[index].status !== 'PROCESSING') {
+      const anonymization = this.anonymizations[index].status = 'PROCESSING';
+      this.actuallyReworking = this.anonymizations[index];
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * Finds all of the processed anonymizations which are labeled with the given status.
    * @param status labeled status to search for

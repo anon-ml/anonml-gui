@@ -149,6 +149,20 @@ export class ControlComponent {
     this.save();
   }
 
+  findIdOfSelectedSpan(selectedText: string): number {
+    const spanTags = document.getElementsByTagName('span');
+    let foundId = -1;
+
+    for (let i = 0; i < spanTags.length; i++) {
+      if (spanTags[i].textContent === selectedText.toString()) {
+        foundId = +spanTags[i].id;
+        break;
+      }
+    }
+
+    return foundId;
+  }
+
   /**
    * Sets up a new anonymization with HUMAN as producer if something of the text
    * is selected.
@@ -161,6 +175,16 @@ export class ControlComponent {
     } else if (document.getSelection) {
       selectedText = document.getSelection();
     }
+
+    const id = this.findIdOfSelectedSpan(selectedText);
+    if (id !== -1 && id !== 0) {
+      if (this.anonymizationHanlderService.reActivateAnonymization(id)) {
+        return;
+      }
+    }
+
+
+
     // first check for wrong selections
     if (String(selectedText) === '' || String(selectedText) === ' ') {
       return;
