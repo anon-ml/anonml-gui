@@ -71,3 +71,7 @@ footer {
   max-height: 1000px;
   overflow-y: scroll;
 }
+
+.verticalLine {
+  border-left: thick solid #ff0000;
+}
