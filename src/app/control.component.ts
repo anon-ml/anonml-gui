@@ -19,6 +19,7 @@ export class ControlComponent {
   protected trigger = 0;
   protected fileName: string;
   protected docId: string;
+  protected version: number;
   protected docFileType: string;
 
   protected focusReworkArea = new EventEmitter<boolean>();
@@ -61,6 +62,7 @@ export class ControlComponent {
   setUpFromDocument(document: Document): void {
     this.fileName = document.fileName;
     this.docId = document.id;
+    this.version = document.version;
     this.docFileType = document.originalFileType;
     for (let i = 0; i < document.anonymizations.length; ++i) {
       document.anonymizations[i].id = i + 1;
@@ -79,7 +81,7 @@ export class ControlComponent {
         console.log('pressed a');
         this.anonymizationHanlderService.acceptedActualAnonymization();
         this.updatePipe();
-        this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
+        this.save();
         break;
       case 119:
         console.log('pressed w');
@@ -90,7 +92,7 @@ export class ControlComponent {
         console.log('pressed d');
         this.anonymizationHanlderService.declineActualAnonymization();
         this.updatePipe();
-        this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
+        this.save();
         break;
       case 115:
         console.log('pressed s');
@@ -111,6 +113,24 @@ export class ControlComponent {
     }
   }
 
+  save(): void {
+    this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId, this.version)
+      .then(response => {
+
+        console.log('Response: ' + response);
+        if (response === -1) {
+          if (window.confirm('Das Dokument ist nicht mehr aktuell!\nNeuen Stand laden?')) {
+            this.httpService.getDocument(this.docId).then(response2 => this.setUpFromDocument(response2));
+          } else {
+            window.alert('Weitere Änderungen werden nicht gespeichert!');
+          }
+        } else {
+          this.version = response;
+        }
+        this.httpService.unluckExport(this.docId);
+      });
+  }
+
   /**
    * Sets the focus back to the main area if 'enter' was pressed in the rework area.
    * In addition calls the necessary handler function for the reworked or added anonymization.
@@ -126,7 +146,7 @@ export class ControlComponent {
     }
 
     this.updatePipe();
-    this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId);
+    this.save();
   }
 
   /**

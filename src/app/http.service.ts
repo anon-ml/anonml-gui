@@ -1,4 +1,5 @@
 import {Anonymization} from './anonymization';
+import {ControlComponent} from './control.component';
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions, RequestOptionsArgs} from '@angular/http';
 import {Observable, } from 'rxjs/Rx';
@@ -53,29 +54,30 @@ export class HttpService {
 
   }
 
+  unluckExport(docId: string): void {
+    this.lockedExport = false;
+    if (this.exportAccessed) {
+      this.exportFile(docId);
+
+    }
+  }
+
   /**
    * Sends the manually reworked anonymizations to the backend to update the document.
    * Additionally calls the api path for the export of the anonymized document.
    * @param anonymizations a list of updated and added anonymizations
    * @param id of the document in progress
    */
-  saveFile(anonymizations: Anonymization[], id: string): void {
+  saveFile(anonymizations: Anonymization[], id: string, version: number): Promise<number> {
     this.lockedExport = true;
-    const url = '/api/update/anonymizations/' + id;
+    const url = '/api/update/anonymizations/' + id + '/' + version;
     const headers = new Headers();
 
-
     headers.append('Content-Type', 'application/json');
-    this.http.post(url, JSON.stringify(anonymizations), {headers: headers})
-      .toPromise().then(Response => {
-        this.lockedExport = false;
-        if (this.exportAccessed) {
-          this.exportFile(id);
-
-        }
-      })
+    return this.http.post(url, JSON.stringify(anonymizations), {headers: headers})
+      .toPromise().then(response => Number(response.text())
+      )
       .catch(this.handleError);
-
 
   }
 
@@ -84,7 +86,7 @@ export class HttpService {
       this.exportAccessed = true;
       return;
     }
-    window.location.replace('api/save/' + id)
+    window.location.replace('api/save/' + id);
     this.exportAccessed = false;
   }
 
