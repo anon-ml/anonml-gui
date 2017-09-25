@@ -231,6 +231,17 @@ export class AnonymizationHandlerService {
     return original;
   }
 
+  notFindOriginal(original: string) {
+
+    let notFindable = '';
+    for (let i = 0; i < original.length; ++i) {
+      notFindable += original[i];
+      notFindable += '&zwnj;';
+    }
+    return notFindable;
+
+  }
+
   /**
    * Pushes the accepted anonymization to the accepted list and
    * searches the next one in the text (called if 'a' is pressed)
