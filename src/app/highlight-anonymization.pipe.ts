@@ -9,8 +9,8 @@ import {textChangeRangeIsUnchanged} from 'typescript';
   name: 'highlightAnonymization'
 })
 export class HighlightAnonymizationPipe implements PipeTransform {
-  
-  
+
+
 
   /**
    * Finds the originals of the anonymizations from the list (with regex) and replaces them in the
@@ -27,8 +27,6 @@ export class HighlightAnonymizationPipe implements PipeTransform {
     console.log('Pipe highlightAnonymization entered.');
     let newValue = value;
     let replacement = '';
-// ###################
-    console.log(anonymizations)
 
     for (let i = 0; i < anonymizations.length; ++i) {
       replacement = '';
@@ -39,7 +37,7 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           + anonymizations[i].data.replacement + '</span>'
 
       } else if (this.anonymizationHanlderService.findAnonymizationsByStatus('DECLINED').includes(anonymizations[i].id)) {
-        replacement = '<span id =' + anonymizations[i].id + ' style="background-color:rgb(242, 250, 255)">'
+        replacement = '<span id =' + anonymizations[i].id + ' style="background-color:rgb(242, 250, 255, 0.5)">'
           + anonymizations[i].data.original + '</span>'
 
       } else {

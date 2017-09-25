@@ -181,8 +181,6 @@ export class ControlComponent {
       }
     }
 
-
-
     // first check for wrong selections
     if (String(selectedText) === '' || String(selectedText) === ' ') {
       return;

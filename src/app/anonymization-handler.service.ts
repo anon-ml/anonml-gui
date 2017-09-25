@@ -35,7 +35,7 @@ export class AnonymizationHandlerService {
 
   getAnonymizations(): Anonymization[] {
 
-    return this.anonymizations.concat(this.temporaryAnonymization);
+    return this.temporaryAnonymization.concat(this.anonymizations.concat());
   }
 
   findAnonymizationById(id: number): number {
