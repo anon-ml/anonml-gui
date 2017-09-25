@@ -37,8 +37,8 @@ export class HighlightAnonymizationPipe implements PipeTransform {
           + anonymizations[i].data.replacement + '</span>'
 
       } else if (this.anonymizationHanlderService.findAnonymizationsByStatus('DECLINED').includes(anonymizations[i].id)) {
-        replacement = '<span id =' + anonymizations[i].id + ' style="background-color:rgbrgb(150, 200, 255, 0.1)">'
-          + anonymizations[i].data.original + '</span>'
+        replacement = '<span id =' + anonymizations[i].id + ' style="background-color:rgb(150, 200, 255, 0.1)">'
+          + anonymizations[i].data.original.replace(/\n/g, '<br/>') + '</span>'
 
       } else {
 
