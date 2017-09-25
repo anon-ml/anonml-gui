@@ -24,6 +24,11 @@ export class AnonymizationHandlerService {
     this.displayableText = '';
   }
 
+  setAnonymizations(anonymizations: Anonymization[]): void {
+    this.anonymizations = anonymizations;
+    this.findNextAnonymization();
+  }
+
   getText(): string {
     return this.displayableText;
   }

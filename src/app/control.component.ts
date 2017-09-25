@@ -117,17 +117,17 @@ export class ControlComponent {
     this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId, this.version)
       .then(response => {
 
-        console.log('Response: ' + response);
-        if (response === -1) {
+        if (response.version === -1) {
           if (window.confirm('Das Dokument ist nicht mehr aktuell!\nNeuen Stand laden?')) {
             this.httpService.getDocument(this.docId).then(response2 => this.setUpFromDocument(response2));
           } else {
             window.alert('Weitere Aenderungen werden nicht gespeichert!');
           }
         } else {
-          this.version = response;
+          this.setUpFromDocument(response)
+          this.updatePipe();
         }
-        this.httpService.unluckExport(this.docId);
+        this.httpService.unlockExport(this.docId);
       });
   }
 
@@ -144,8 +144,6 @@ export class ControlComponent {
     } else {
       this.anonymizationHanlderService.reworkedActualAnonymization();
     }
-
-    this.updatePipe();
     this.save();
   }
 

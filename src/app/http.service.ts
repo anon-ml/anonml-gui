@@ -54,7 +54,7 @@ export class HttpService {
 
   }
 
-  unluckExport(docId: string): void {
+  unlockExport(docId: string): void {
     this.lockedExport = false;
     if (this.exportAccessed) {
       this.exportFile(docId);
@@ -68,15 +68,14 @@ export class HttpService {
    * @param anonymizations a list of updated and added anonymizations
    * @param id of the document in progress
    */
-  saveFile(anonymizations: Anonymization[], id: string, version: number): Promise<number> {
+  saveFile(anonymizations: Anonymization[], id: string, version: number): Promise<Document> {
     this.lockedExport = true;
     const url = '/api/update/anonymizations/' + id + '/' + version;
     const headers = new Headers();
 
     headers.append('Content-Type', 'application/json');
     return this.http.post(url, JSON.stringify(anonymizations), {headers: headers})
-      .toPromise().then(response => Number(response.text())
-      )
+      .toPromise().then(response => response.json() as Document)
       .catch(this.handleError);
 
   }

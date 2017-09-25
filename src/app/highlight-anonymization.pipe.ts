@@ -25,6 +25,8 @@ export class HighlightAnonymizationPipe implements PipeTransform {
     console.log('Pipe highlightAnonymization entered.');
     let newValue = value;
     let replacement = '';
+// ###################
+    console.log(anonymizations)
 
     for (let i = 0; i < anonymizations.length; ++i) {
       replacement = '';
