@@ -75,3 +75,7 @@ footer {
 .verticalLine {
   border-left: thick solid #ff0000;
 }
+
+.lineHeightNestedAnons {
+	line-height: 165%;
+}

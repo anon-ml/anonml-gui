@@ -22,7 +22,8 @@ const appRoutes: Routes = [
     HighlightAnonymizationPipe,
     FocusReworkDirective,
     FocusMainDirective,
-    ControlComponent
+    ControlComponent,
+
   ],
   imports: [
     RouterModule.forRoot(appRoutes),

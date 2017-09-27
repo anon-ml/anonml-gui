@@ -1,6 +1,6 @@
 import {Anonymization} from './anonymization';
 import {AnonymizationHandlerService} from './anonymization-handler.service';
-import {Component, Input, ViewChildren, ViewChild, EventEmitter} from '@angular/core';
+import {Component, Input, ViewChildren, ViewChild, EventEmitter, ElementRef, AfterViewChecked, Renderer2} from '@angular/core';
 import {FileReference} from 'typescript';
 import {HttpService} from './http.service';
 import {Document} from './document';
@@ -13,7 +13,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./control.component.css'],
   providers: [HttpService, AnonymizationHandlerService]
 })
-export class ControlComponent {
+export class ControlComponent implements AfterViewChecked {
 
   private param: string;
   protected trigger = 0;
@@ -29,7 +29,7 @@ export class ControlComponent {
 
 
   constructor(private httpService: HttpService, protected anonymizationHanlderService: AnonymizationHandlerService,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute, private elRef: ElementRef, private renderer: Renderer2) {
     activatedRoute.params.subscribe(param => this.param = param.id);
     console.log(this.param);
     if (this.param === undefined || this.param === '') {
@@ -45,6 +45,46 @@ export class ControlComponent {
   updatePipe(): void {
     this.trigger++;
   }
+
+  countChildrenLayers(span: any, counter: number): number {
+
+    const children = span.querySelectorAll('span');
+
+    if (children.length === 0) {
+      return counter;
+    } else {
+      let maxCounter = 0;
+
+      for (let i = 0; i < children.length; ++i) {
+        maxCounter = Math.max(maxCounter, this.countChildrenLayers(children[i], counter + 1));
+      }
+      return maxCounter;
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    console.log('bigger if nested')
+
+    const span = this.elRef.nativeElement.querySelectorAll('span');
+    if (span.length === 0) {
+      console.log('span null ')
+      return;
+    }
+
+    for (let i = 0; i < span.length; ++i) {
+
+      const childrenCount = this.countChildrenLayers(span[i], 0);
+      if (childrenCount !== 0) {
+        this.renderer.setStyle(span[i], 'border', (2 * childrenCount) + 'px solid ' + span[i].style.backgroundColor);
+      }
+
+    }
+    //    this.renderer.listen(span[0], 'click', (evt) => {
+    //      console.log('First span clicked!');
+    //    });
+    //    span[0].addEventListener('click', this.onClickSpan);
+  }
+
 
   /**
    * Uploads the file to the backend and sets up the needed elements from the response

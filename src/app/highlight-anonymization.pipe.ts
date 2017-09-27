@@ -24,7 +24,7 @@ export class HighlightAnonymizationPipe implements PipeTransform {
    * @return html with the originals replaced by the <span> object to highlight it
    */
   transform(value: string, anonymizations: Anonymization[], trigger: number): SafeHtml {
-    console.log('Pipe highlightAnonymization entered.');
+    console.log('Pipe highlightAnonymization entered.' + trigger);
     let newValue = value;
     let replacement = '';
 
