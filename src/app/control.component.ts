@@ -63,11 +63,9 @@ export class ControlComponent implements AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    console.log('bigger if nested')
 
     const span = this.elRef.nativeElement.querySelectorAll('span');
     if (span.length === 0) {
-      console.log('span null ')
       return;
     }
 
