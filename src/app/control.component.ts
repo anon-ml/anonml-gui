@@ -35,6 +35,7 @@ export class ControlComponent implements AfterViewChecked {
     if (this.param === undefined || this.param === '') {
       console.log('no param found.')
     } else {
+      console.log('set up by document ' + this.param)
       this.httpService.getDocument(this.param).then(response =>
         this.setUpFromDocument(response)
       );
