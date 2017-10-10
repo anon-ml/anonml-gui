@@ -47,7 +47,7 @@ export class HighlightAnonymizationPipe implements PipeTransform {
         }
 
         replacement += this.anonymizationHanlderService.generateColorForLabel(anonymizations[i].data.label,
-          anonymizations[i].data.original.replace(/\n/g, '<br/>'), false);
+          anonymizations[i].data.original.replace(/\n/g, '<br/>'), anonymizations[i].id , false);
 
         if (anonymizations[i].id === this.anonymizationHanlderService.getActuallyReworking().id) {
           replacement += '<span style="background-color:rgb(255,0,0)">O</span>';

@@ -52,13 +52,14 @@ export class AnonymizationHandlerService {
 
     const index = this.findAnonymizationById(id);
     console.log('found index: ' + index);
-    if (this.anonymizations[index].status !== 'PROCESSING') {
-      const anonymization = this.anonymizations[index].status = 'PROCESSING';
-      this.actuallyReworking = this.anonymizations[index];
-      return true;
-    } else {
+    if (index === -1) {
       return false;
     }
+
+    const anonymization = this.anonymizations[index].status = 'PROCESSING';
+    this.actuallyReworking = this.anonymizations[index];
+    return true;
+
   }
 
   /**
@@ -103,13 +104,13 @@ export class AnonymizationHandlerService {
    * @param asHTML directly sanitize as HTML or not
    * @return a string or a HTML based on the asHTML parameter
    */
-  generateColorForLabel(label: string, original: string, asHTML: boolean) {
+  generateColorForLabel(label: string, original: string, id: number, asHTML: boolean) {
     let replacement = '';
     const indexOfLabel = this.allLabels.indexOf(label)
     if (indexOfLabel === -1) {
       replacement += '<span style="background-color:rgb( 255 , 255, 255)">' + original + '</span>'
     } else {
-      replacement += '<span style="background-color:';
+      replacement += '<span id = ' + id + ' style="background-color:';
       switch (indexOfLabel) {
         case 0:
           replacement += 'rgb(60, 180, 75)';

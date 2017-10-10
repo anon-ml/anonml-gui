@@ -186,17 +186,24 @@ export class ControlComponent implements AfterViewChecked {
     this.save();
   }
 
+  dismissLineBreak(word: string): string {
+    word = word.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+    word = word.replace(/( )*\r\n( )*/g, ' ');
+    word = word.replace(/( )*\n( )*/g, ' ');
+    return word;
+  }
+
   findIdOfSelectedSpan(selectedText: string): number {
     const spanTags = document.getElementsByTagName('span');
     let foundId = -1;
 
     for (let i = 0; i < spanTags.length; i++) {
-      if (spanTags[i].textContent === selectedText.toString()) {
+      if (this.dismissLineBreak(spanTags[i].textContent) === this.dismissLineBreak(selectedText)) {
         foundId = +spanTags[i].id;
         break;
       }
     }
-
+    console.log(foundId)
     return foundId;
   }
 
@@ -213,6 +220,13 @@ export class ControlComponent implements AfterViewChecked {
       selectedText = document.getSelection();
     }
 
+    selectedText = String(selectedText).trim();
+
+    // first check for wrong selections
+    if (selectedText === '' || selectedText === ' ') {
+      return;
+    }
+
     const id = this.findIdOfSelectedSpan(selectedText);
     if (id !== -1 && id !== 0) {
       if (this.anonymizationHanlderService.reActivateAnonymization(id)) {
@@ -220,10 +234,7 @@ export class ControlComponent implements AfterViewChecked {
       }
     }
 
-    // first check for wrong selections
-    if (String(selectedText) === '' || String(selectedText) === ' ') {
-      return;
-    }
+
     this.tempAnonymization = new Anonymization();
     this.tempAnonymization.data.original = selectedText.toString();
     this.tempAnonymization.data.label = 'UNKNOWN';
