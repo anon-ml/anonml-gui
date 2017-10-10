@@ -1,5 +1,5 @@
-import {Anonymization} from './anonymization';
-import {AnonymizationHandlerService} from './anonymization-handler.service';
+import {Anonymization} from './model/anonymization';
+import {AnonymizationHandlerService} from './services/anonymization-handler.service';
 import {AppComponent} from './app.component';
 import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';

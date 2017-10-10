@@ -1,9 +1,9 @@
-import {Anonymization} from './anonymization';
-import {AnonymizationHandlerService} from './anonymization-handler.service';
+import {Anonymization} from '../model/anonymization';
+import {AnonymizationHandlerService} from '../services/anonymization-handler.service';
 import {Component, Input, ViewChildren, ViewChild, EventEmitter, ElementRef, AfterViewChecked, Renderer2} from '@angular/core';
 import {FileReference} from 'typescript';
-import {HttpService} from './http.service';
-import {Document} from './document';
+import {HttpService} from '../services/http.service';
+import {Document} from '../model/document';
 import {HttpModule} from '@angular/http';
 import {ActivatedRoute} from '@angular/router';
 
@@ -28,6 +28,9 @@ export class ControlComponent implements AfterViewChecked {
   protected tempAnonymization;
 
 
+  /**
+   * Looks for params (document id) in the url to load already uploaded documents
+   */
   constructor(private httpService: HttpService, protected anonymizationHanlderService: AnonymizationHandlerService,
     private activatedRoute: ActivatedRoute, private elRef: ElementRef, private renderer: Renderer2) {
     activatedRoute.params.subscribe(param => this.param = param.id);
@@ -47,6 +50,12 @@ export class ControlComponent implements AfterViewChecked {
     this.trigger++;
   }
 
+  /**
+   * Counts recursivly how much a span is encapsulated to calculate how thick the added border should be
+   * @param span the span which is looked at
+   * @param counter how much encapsulation layers are there
+   * @return the counted number
+   */
   countChildrenLayers(span: any, counter: number): number {
 
     const children = span.querySelectorAll('span');
@@ -63,6 +72,11 @@ export class ControlComponent implements AfterViewChecked {
     }
   }
 
+  /**
+   * Is called every time the view is checked. It makes encapsulated anonymizations
+   * appear more distinguishable by adding a border to the containing one.
+   * Making the Anonymizations clickable would happen here, but actually it is not working... :(
+   */
   ngAfterViewChecked(): void {
 
     const span = this.elRef.nativeElement.querySelectorAll('span');
@@ -98,6 +112,10 @@ export class ControlComponent implements AfterViewChecked {
     );
   }
 
+  /**
+   * Sets all needed parametes to be able to manually adjust anonymizations
+   * @param document object to set for manual adjustments
+   */
   setUpFromDocument(document: Document): void {
     this.fileName = document.fileName;
     this.docId = document.id;
@@ -136,13 +154,13 @@ export class ControlComponent implements AfterViewChecked {
       case 115:
         console.log('pressed s');
         if (this.anonymizationHanlderService.getActuallyReworking() === undefined) {
-          if (window.confirm('Wirklich fertig?')) {
+          if (window.confirm('Really finished?')) {
             this.httpService.exportFile(this.docId);
             this.anonymizationHanlderService.resetDisplayableText();
           }
 
         } else {
-          window.alert('Es sind noch offene Anonymisierungen vorhanden!')
+          window.alert('There are still open anonymizations!')
           console.log('Document not finished!');
         }
 
@@ -152,15 +170,19 @@ export class ControlComponent implements AfterViewChecked {
     }
   }
 
+  /**
+   * Saves the document after each interaction and checks if the version is ok (not -1)
+   * If not a request is shown if the document should be reloaded.
+   */
   save(): void {
     this.httpService.saveFile(this.anonymizationHanlderService.getAnonymizations(), this.docId, this.version)
       .then(response => {
 
         if (response.version === -1) {
-          if (window.confirm('Das Dokument ist nicht mehr aktuell!\nNeuen Stand laden?')) {
+          if (window.confirm('The documents version is outdated!\nLoad new version?')) {
             this.httpService.getDocument(this.docId).then(response2 => this.setUpFromDocument(response2));
           } else {
-            window.alert('Weitere Aenderungen werden nicht gespeichert!');
+            window.alert('Following changes are not saved anymore!');
           }
         } else {
           this.setUpFromDocument(response)
@@ -186,6 +208,11 @@ export class ControlComponent implements AfterViewChecked {
     this.save();
   }
 
+  /**
+   * To make the selection and the span text comparable
+   * @param word to replace linebreak by space
+   * @return the prepared string
+   */
   dismissLineBreak(word: string): string {
     word = word.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     word = word.replace(/( )*\r\n( )*/g, ' ');
@@ -193,18 +220,21 @@ export class ControlComponent implements AfterViewChecked {
     return word;
   }
 
+  /**
+   * Searches for a span which holds the given text
+   *
+   * @param selectedText text to search for in the span element list
+   * @return -1 if no span contains the text or the id of the span which
+   * in fact is the id of the contained anonymization
+   */
   findIdOfSelectedSpan(selectedText: string): number {
     const spanTags = document.getElementsByTagName('span');
-    let foundId = -1;
-
     for (let i = 0; i < spanTags.length; i++) {
       if (this.dismissLineBreak(spanTags[i].textContent) === this.dismissLineBreak(selectedText)) {
-        foundId = +spanTags[i].id;
-        break;
+        return +spanTags[i].id;
       }
     }
-    console.log(foundId)
-    return foundId;
+    return -1;
   }
 
   /**

@@ -1,4 +1,4 @@
-import {Anonymization} from './anonymization';
+import {Anonymization} from './model/anonymization';
 import {Component} from '@angular/core';
 
 

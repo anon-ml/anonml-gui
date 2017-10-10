@@ -1,4 +1,4 @@
-import {Anonymization} from './anonymization';
+import {Anonymization} from '../model/anonymization';
 import {HttpService} from './http.service';
 import {Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -48,6 +48,11 @@ export class AnonymizationHandlerService {
     return -1;
   }
 
+  /**
+   * Searches the id of the anonymization to activate by given anonymization id, sets it to PROCESSING and to actuallyReworking
+   * @param id of the anonymization which should be activated
+   * @return false if the anonymization is not found and else true
+   */
   reActivateAnonymization(id: number): boolean {
 
     const index = this.findAnonymizationById(id);
@@ -101,6 +106,7 @@ export class AnonymizationHandlerService {
    * Generates a <span> element with different background colors based on the index of the given label
    * @param label one of the loaded labels (e.g. Person, Organization) which the color bases on
    * @param original the word(-sequence) which is placed in the <span>
+   * @param id of the anonymization to set as id of the span
    * @param asHTML directly sanitize as HTML or not
    * @return a string or a HTML based on the asHTML parameter
    */

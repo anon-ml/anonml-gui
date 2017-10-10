@@ -1,10 +1,10 @@
-import {Anonymization} from './anonymization';
-import {ControlComponent} from './control.component';
+import {Anonymization} from '../model/anonymization';
+import {ControlComponent} from '../control/control.component';
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions, RequestOptionsArgs} from '@angular/http';
 import {Observable, } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
-import {Document} from './document';
+import {Document} from '../model/document';
 
 @Injectable()
 export class HttpService {
