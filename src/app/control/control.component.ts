@@ -1,6 +1,6 @@
 import {Anonymization} from '../model/anonymization';
 import {AnonymizationHandlerService} from '../services/anonymization-handler.service';
-import {Component, Input, ViewChildren, ViewChild, EventEmitter, ElementRef, AfterViewChecked, Renderer2} from '@angular/core';
+import {Component, Input, ViewChildren, ViewChild, EventEmitter, ElementRef, AfterViewChecked, Renderer2, OnInit} from '@angular/core';
 import {FileReference} from 'typescript';
 import {HttpService} from '../services/http.service';
 import {Document} from '../model/document';
@@ -13,9 +13,9 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./control.component.css'],
   providers: [HttpService, AnonymizationHandlerService]
 })
-export class ControlComponent implements AfterViewChecked {
+export class ControlComponent implements AfterViewChecked, OnInit {
 
-  private param: string;
+  //  private param: string;
   protected trigger = 0;
   protected fileName: string;
   protected docId: string;
@@ -33,16 +33,24 @@ export class ControlComponent implements AfterViewChecked {
    */
   constructor(private httpService: HttpService, protected anonymizationHanlderService: AnonymizationHandlerService,
     private activatedRoute: ActivatedRoute, private elRef: ElementRef, private renderer: Renderer2) {
-    activatedRoute.params.subscribe(param => this.param = param.id);
-    console.log(this.param);
-    if (this.param === undefined || this.param === '') {
-      console.log('no param found.')
-    } else {
-      console.log('set up by document ' + this.param)
-      this.httpService.getDocument(this.param).then(response =>
-        this.setUpFromDocument(response)
-      );
-    }
+
+  }
+
+  /**
+   * Checks if there is set an id for preloading a document
+   */
+  ngOnInit() {
+    this.httpService.getPreLoadDocument().then(doc => {
+
+      console.log(doc);
+      if (doc === null) {
+        console.log('no param found.')
+      } else {
+        console.log('set up by document ' + doc)
+        this.setUpFromDocument(doc);
+        this.httpService.resetDocumentIndex();
+      }
+    })
     this.focusMainArea.emit(true);
   }
 

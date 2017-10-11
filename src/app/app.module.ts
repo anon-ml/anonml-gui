@@ -12,7 +12,6 @@ import {ControlComponent} from './control/control.component';
 
 const appRoutes: Routes = [
   {path: '', component: ControlComponent},
-  {path: 'document/:id', component: ControlComponent},
   {path: '**', redirectTo: ''}
 ];
 

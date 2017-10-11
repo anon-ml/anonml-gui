@@ -20,8 +20,8 @@
 		</div>
 		<div class="col-sm-2">
 			<div class="row">
-				<a target="_blank" href="overview"><button
-						type="button" class="btn btn-link">Document management</button></a>&nbsp;<a
+				<a target="_blank" href="./overview"><button type="button"
+						class="btn btn-link">Document management</button></a>&nbsp;<a
 					target="_blank"
 					href="https://github.com/anon-ml/anonml-integration/wiki/GUI#control"><button
 						type="button" class="btn btn-link">Help</button></a>
@@ -131,7 +131,7 @@
 				<ul>
 					<li *ngFor="let label of anonymizationHanlderService.getLabels()">
 						<div
-							[innerHtml]="anonymizationHanlderService.generateColorForLabel(label,label,true)"></div>
+							[innerHtml]="anonymizationHanlderService.generateColorForLabel(label,label,0,true)"></div>
 					</li>
 				</ul>
 			</div>

@@ -125,7 +125,7 @@ export class AnonymizationHandlerService {
           replacement += 'rgb(255, 225, 25)';
           break;
         case 2:
-          replacement += 'rgb(0, 130, 200)';
+          replacement += 'rgb(70, 240, 240)';
           break;
         case 3:
           replacement += 'rgb(245, 130, 48)';
