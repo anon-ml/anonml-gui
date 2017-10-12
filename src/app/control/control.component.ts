@@ -41,12 +41,10 @@ export class ControlComponent implements AfterViewChecked, OnInit {
    */
   ngOnInit() {
     this.httpService.getPreLoadDocument().then(doc => {
-
-      console.log(doc);
       if (doc === null) {
         console.log('no param found.')
       } else {
-        console.log('set up by document ' + doc)
+        console.log('set up by document.')
         this.setUpFromDocument(doc);
         this.httpService.resetDocumentIndex();
       }
