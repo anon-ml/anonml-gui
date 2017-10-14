@@ -24,7 +24,6 @@ export class ControlComponent implements AfterViewChecked, OnInit {
 
   protected focusReworkArea = new EventEmitter<boolean>();
   protected focusMainArea = new EventEmitter<boolean>();
-  protected selectedText;
   protected tempAnonymization;
 
 
@@ -256,23 +255,24 @@ export class ControlComponent implements AfterViewChecked, OnInit {
       selectedText = document.getSelection();
     }
 
-    selectedText = String(selectedText).trim();
+    selectedText = String(selectedText);
 
     // first check for wrong selections
     if (selectedText === '' || selectedText === ' ') {
       return;
     }
 
-    const id = this.findIdOfSelectedSpan(selectedText);
+    const id = this.findIdOfSelectedSpan(selectedText.trim());
     if (id !== -1 && id !== 0) {
       if (this.anonymizationHanlderService.reActivateAnonymization(id)) {
         return;
       }
     }
 
+    selectedText = selectedText.replace(/\s*\r\n/g, ' \r\n');
 
     this.tempAnonymization = new Anonymization();
-    this.tempAnonymization.data.original = selectedText.toString();
+    this.tempAnonymization.data.original = selectedText;
     this.tempAnonymization.data.label = 'UNKNOWN';
     this.tempAnonymization.data.replacement = '';
     this.tempAnonymization.producer = 'HUMAN';
