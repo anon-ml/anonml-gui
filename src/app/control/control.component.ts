@@ -21,6 +21,7 @@ export class ControlComponent implements AfterViewChecked, OnInit {
   protected docId: string;
   protected version: number;
   protected docFileType: string;
+  private fullText: string;
 
   protected focusReworkArea = new EventEmitter<boolean>();
   protected focusMainArea = new EventEmitter<boolean>();
@@ -126,6 +127,7 @@ export class ControlComponent implements AfterViewChecked, OnInit {
     this.docId = document.id;
     this.version = document.version;
     this.docFileType = document.originalFileType;
+    this.fullText = document.fullText;
     for (let i = 0; i < document.anonymizations.length; ++i) {
       document.anonymizations[i].id = i + 1;
     }
@@ -269,7 +271,15 @@ export class ControlComponent implements AfterViewChecked, OnInit {
       }
     }
 
-    selectedText = selectedText.replace(/\s*\r\n/g, ' \r\n');
+    selectedText = selectedText.replace(/\s*\r\n/g, '\\s*\\\r\\\n');
+    const regex = new RegExp(selectedText, 'g');
+    const found = this.fullText.match(regex);
+
+    if (found !== null) {
+      console.log('Found!')
+      selectedText = found[0]
+    }
+
 
     this.tempAnonymization = new Anonymization();
     this.tempAnonymization.data.original = selectedText;
