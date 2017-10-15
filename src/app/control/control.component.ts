@@ -257,28 +257,39 @@ export class ControlComponent implements AfterViewChecked, OnInit {
       selectedText = document.getSelection();
     }
 
-    selectedText = String(selectedText);
+    selectedText = String(selectedText).trim();
 
     // first check for wrong selections
     if (selectedText === '' || selectedText === ' ') {
       return;
     }
 
-    const id = this.findIdOfSelectedSpan(selectedText.trim());
+    const id = this.findIdOfSelectedSpan(selectedText);
     if (id !== -1 && id !== 0) {
       if (this.anonymizationHanlderService.reActivateAnonymization(id)) {
         return;
       }
     }
+    // Alle Events\r\n\r\nund Vorträge\r\n\r\n2017
 
-    selectedText = selectedText.replace(/\s*\r\n/g, '\\s*\\\r\\\n');
-    const regex = new RegExp(selectedText, 'g');
-    const found = this.fullText.match(regex);
+    console.log(this.fullText.indexOf(selectedText));
+    if (this.fullText.indexOf(selectedText) === -1) {
+      console.log('Selected not found - find match (regex)');
+//      console.log(new RegExp(selectedText.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')))
+      const regex = new RegExp(selectedText.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+        .replace(/\s*\r\n/g, '\\s*\\\r\\\n\\s*'), 'g');
 
-    if (found !== null) {
-      console.log('Found!')
-      selectedText = found[0]
+//      console.log(regex)
+      const found = this.fullText.match(regex);
+
+      if (found !== null) {
+        console.log('Found!');
+        selectedText = found[0];
+      } else {
+        window.alert('The selection can not be found. Splitting the selection in two could help.');
+      }
     }
+
 
 
     this.tempAnonymization = new Anonymization();
